@@ -56,43 +56,53 @@ async def hello(ctx):
 # Example: !wr ico co-op 60hz
 @bot.command(name="wr", help="Get the world record for a category")
 async def get_wr(ctx):
-    var_flag = False
+    var = []
     # Get the game id
     game_name = ctx.message.content.split(" ")[1]
     # Get the category id
     category = ctx.message.content.split(" ")[2]
     # Get the category variable 1
     if len(ctx.message.content.split(" ")) > 3:
-        var = []
         i = 3
         while i < len(ctx.message.content.split(" ")):
             var.append(ctx.message.content.split(" ")[i])
             i += 1
 
-        var_flag = True
-
     game = game_db["data"][game_name]
 
-    if var_flag:
-        url = f"{base_url}leaderboards/{game['id']}/category/{game['full-game-categories'][category]['id']}?top=1&embed=players"
-        for v in var:   
-            url += f"&var-{game['full-game-categories'][category]['var_id']}={game['full-game-categories'][category]['variables'][v]['id']}"
-        wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()
-    else:
-        wr = requests.get(f"{base_url}leaderboards/{game['id']}/category/{game['full-game-categories'][category]['id']}?top=1&embed=players", headers={"X-API-Key": SRCOM_TOKEN}).json()
-    
+    url = f"{base_url}leaderboards/{game['id']}/category/{game['full-game-categories'][category]['id']}?top=1&embed=players"
+    i = 0
+    for v in var:
+        url += f"&var-{game['full-game-categories'][category]['variables'][i]['var_id']}={game['full-game-categories'][category]['variables'][i]['values'][v]['id']}"
+        i += 1
+    wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()
+
     if len(wr['data']['runs']) > 0:
         # Create the embed
         embed = discord.Embed(title='World Record', color=discord.Color.random())
-        embed.add_field(name='Game', value=game['name'], inline=True)
-        embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=True)
-        if var_flag:
-            for v in var:
-                embed.add_field(name='Variable', value=game['full-game-categories'][category]['variables'][v]['name'], inline=True)
-        for player in wr['data']['runs'][0]['run']['players']:
-            player_name = requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international']
-            embed.add_field(name='Runner', value=player_name, inline=True)
-        embed.add_field(name='Time', value=datetime.timedelta(seconds=wr['data']['runs'][0]['run']['times']['primary_t']), inline=False)
+        embed.add_field(name='Game', value=game['name'], inline=False)
+        embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=False)
+        # Check for variables
+        variable_text = ""
+        i = 0
+        for v in var:
+            variable_text += f"{game['full-game-categories'][category]['variables'][i]['values'][v]['name']}, "
+            i += 1
+        if variable_text != "":
+            embed.add_field(name='Variable/s', value=variable_text[:-2], inline=False)
+        # Check for Private User
+        if wr['data']['runs'][0]['run']['players'][0]['rel'] == 'guest':
+            embed.add_field(name='Runner', value=wr['data']['runs'][0]['run']['players'][0]['name'], inline=False)
+        else:
+            player_names = ""
+            for player in wr['data']['runs'][0]['run']['players']:
+                player_names += requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international'] + ", "
+            embed.add_field(name='Runner/s', value=player_names[:-2], inline=False)
+        primary = wr['data']['runs'][0]['run']['times']['primary_t']
+        realtime = wr['data']['runs'][0]['run']['times']['realtime_t']
+        embed.add_field(name='Time', value=datetime.timedelta(seconds=primary), inline=True)
+        if realtime != wr['data']['runs'][0]['run']['times']['primary_t']:
+            embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
 
         await ctx.send(embed=embed)
 

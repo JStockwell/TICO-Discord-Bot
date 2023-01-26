@@ -7,44 +7,56 @@
 				"any%":{
 					"id":"rklxqxwk",
 					"name":"Any%",
-					"var_id":"yn25reen",
-					"variables":{
-						"60hz":{
-							"id":"5lerr0mq",
-							"name":"60hz"
-						},
-						"50hz":{
-							"id":"0q5nnm7q",
-							"name":"50hz"
-						},
-						"ntsc-u":{
-							"id":"4lxppk3q",
-							"name":"PS2 NTSC-U"
+					"variables":[
+						{
+							"var_id":"yn25reen",
+							"values":{
+								"60hz":{
+									"id":"5lerr0mq",
+									"name":"60hz"
+								},
+								"50hz":{
+									"id":"0q5nnm7q",
+									"name":"50hz"
+								},
+								"ntsc-u":{
+									"id":"4lxppk3q",
+									"name":"PS2 NTSC-U"
+								}
+							}
 						}
-					}
+					]
 				},
 				"co-op":{
 					"id":"ndx53ook",
 					"name":"Co-op",
-					"var_id":"jlzwvzql",
-					"variables":{
-						"60hz":{
-							"id":"jq600wvq",
-							"name":"60hz"
-						},
-						"50hz":{
-							"id":"5lmkke8q",
-							"name":"50hz"
+					"variables":[
+						{
+							"var_id":"jlzwvzql",
+							"values":{
+								"60hz":{
+									"id":"jq600wvq",
+									"name":"60hz"
+								},
+								"50hz":{
+									"id":"5lmkke8q",
+									"name":"50hz"
+								}
+							}
 						}
-					}
+					]
 				},
 				"enlightenment":{
 					"id":"vdox81vd",
 					"name":"Enlightenment",
-					"var_id":"",
-					"variables":{
-						
-					}
+					"variables":[
+						{
+							"var_id":"",
+							"values":{
+								
+							}
+						}
+					]
 				}
 			},
 			"level-categories":{
@@ -60,26 +72,71 @@
 		},
 		"sotc":{
 			"id":"9j1l8v6g",
-            "name":"ICO",
+			"name":"Shadow of the Colossus (2005)",
 			"full-game-categories":{
 				"any%":{
-					"id":"rklxqxwk",
+					"id":"zjdznvdv",
 					"name":"Any%",
-					"var_id":"yn25reen",
-					"variables":{
-						"60hz":{
-							"id":"5lerr0mq",
-							"name":"60hz"
+					"variables":[
+						{
+							"var_id":"p85r513n",
+							"values":{
+								"ps2":{
+									"id":"rqvgy75q",
+									"name":"PS2 Original"
+								},
+								"ps3":{
+									"id":"5le9xopq",
+									"name":"PS3 Remaster"
+								}
+							}
 						},
-						"50hz":{
-							"id":"0q5nnm7q",
-							"name":"50hz"
-						},
-						"ntsc-u":{
-							"id":"4lxppk3q",
-							"name":"PS2 NTSC-U"
+                        {
+							"var_id":"onvjw4mn",
+							"values":{
+								"normal":{
+									"id":"0137xjdl",
+									"name":"Normal"
+								},
+								"hard":{
+									"id":"rqvox07l",
+									"name":"Hard"
+								}
+							}
 						}
-					}
+					]
+				},
+                "boss_rush":{
+					"id":"r02qrpky",
+					"name":"Boss Rush",
+					"variables":[
+						{
+							"var_id":"p85r513n",
+							"values":{
+								"ps2":{
+									"id":"rqvgy75q",
+									"name":"PS2 Original"
+								},
+								"ps3":{
+									"id":"5le9xopq",
+									"name":"PS3 Remaster"
+								}
+							}
+						},
+                        {
+							"var_id":"ylpe2qd8",
+							"values":{
+								"nta":{
+									"id":"0q5z4mmq",
+									"name":"NTA"
+								},
+								"hta":{
+									"id":"4lxogk2l",
+									"name":"HTA"
+								}
+							}
+						}
+					]
 				}
 			},
 			"level-categories":{

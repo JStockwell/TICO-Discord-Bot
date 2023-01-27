@@ -16,6 +16,7 @@ base_url = "https://www.speedrun.com/api/v1/"
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 DEV_MODE = True
 
@@ -115,4 +116,7 @@ async def post_run(ctx,game,var,category,run):
 
     await ctx.send(embed=embed)
 
-bot.run(TOKEN)
+if DEV_MODE:
+    bot.run(TEST_TOKEN)
+else:
+    bot.run(TOKEN)

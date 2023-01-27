@@ -78,36 +78,41 @@ async def get_wr(ctx):
     wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()
 
     if len(wr['data']['runs']) > 0:
-        # Create the embed
-        embed = discord.Embed(title='World Record', color=discord.Color.random())
-        embed.add_field(name='Game', value=game['name'], inline=False)
-        embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=False)
-        # Check for variables
-        variable_text = ""
-        i = 0
-        for v in var:
-            variable_text += f"{game['full-game-categories'][category]['variables'][i]['values'][v]['name']}, "
-            i += 1
-        if variable_text != "":
-            embed.add_field(name='Variable/s', value=variable_text[:-2], inline=False)
-        # Check for Private User
-        if wr['data']['runs'][0]['run']['players'][0]['rel'] == 'guest':
-            embed.add_field(name='Runner', value=wr['data']['runs'][0]['run']['players'][0]['name'], inline=False)
-        else:
-            player_names = ""
-            for player in wr['data']['runs'][0]['run']['players']:
-                player_names += requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international'] + ", "
-            embed.add_field(name='Runner/s', value=player_names[:-2], inline=False)
-        primary = wr['data']['runs'][0]['run']['times']['primary_t']
-        realtime = wr['data']['runs'][0]['run']['times']['realtime_t']
-        embed.add_field(name='Time', value=datetime.timedelta(seconds=primary), inline=True)
-        if realtime != wr['data']['runs'][0]['run']['times']['primary_t']:
-            embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
-
-        await ctx.send(embed=embed)
+        await post_run(ctx,game,var,category,wr)
 
     else:
         await ctx.send("No world record found")
 
+async def post_run(ctx,game,var,category,run):
+    embed = discord.Embed(title='World Record', color=discord.Color.random())
+    embed.add_field(name='Game', value=game['name'], inline=False)
+    embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=False)
+    # Check for variables
+    variable_text = ""
+    i = 0
+    for v in var:
+        variable_text += f"{game['full-game-categories'][category]['variables'][i]['values'][v]['name']}, "
+        i += 1
+    if variable_text != "":
+        embed.add_field(name='Variable/s', value=variable_text[:-2], inline=False)
+    # Check for Private User
+    if run['data']['runs'][0]['run']['players'][0]['rel'] == 'guest':
+        embed.add_field(name='Runner', value=run['data']['runs'][0]['run']['players'][0]['name'], inline=False)
+    else:
+        player_names = ""
+        for player in run['data']['runs'][0]['run']['players']:
+            player_names += requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international'] + ", "
+        embed.add_field(name='Runner/s', value=player_names[:-2], inline=False)
+    primary = run['data']['runs'][0]['run']['times']['primary_t']
+    realtime = run['data']['runs'][0]['run']['times']['realtime_t']
+    primary_time = str(datetime.timedelta(seconds=primary))
+    if primary_time[-4:] == "0000":
+        embed.add_field(name='Time', value=primary_time[:-4], inline=True)
+    else:
+        embed.add_field(name='Time', value=primary_time, inline=True)
+    if realtime != run['data']['runs'][0]['run']['times']['primary_t']:
+        embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
+
+    await ctx.send(embed=embed)
 
 bot.run(TOKEN)

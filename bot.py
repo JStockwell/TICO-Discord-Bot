@@ -6,7 +6,8 @@ import json
 import datetime
 
 from dotenv import load_dotenv
-from discord.ext import commands
+from discord.ext import commands, tasks
+from datetime import datetime
 
 ### --- REST api Initialization --- ###
 
@@ -28,6 +29,7 @@ game_db = json.load(open('games.json', 'r'))
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
+    post_verification.start()
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -53,8 +55,21 @@ async def on_command_error(ctx, error):
 async def hello(ctx):
     await ctx.send("Hello!")
 
+@bot.command(name="beginnerhelp", help="Document with all relevant information for beginners")
+async def beginner_help(ctx):
+    await ctx.send("https://docs.google.com/document/d/1n9hQe9EZO59_sURBwirt9CwpzmBoge_8OWe21w6dZMA/edit?usp=sharing")
+
+@bot.command(name="socials", help="Link to the TICO Speedruns socials")
+async def socials(ctx):
+    message = "Follow us at!\n"
+    message += "Youtube: https://www.youtube.com/channel/UCMLlkQ8CFV8BqXFz86usFeQ\n"
+    message += "Twitch: https://www.twitch.tv/teamicospeedruns\n"
+    message += "Twitter: https://twitter.com/IcoSpeedruns\n"
+    await ctx.send(message)
+
 # Format: !wr <game> <category> <var_1> <var_2>
 # Example: !wr ico co-op 60hz
+# TODO Add info for people to actually use this lmao
 @bot.command(name="wr", help="Get the world record for a category")
 async def get_wr(ctx):
     var = []
@@ -115,6 +130,32 @@ async def post_run(ctx,game,var,category,run):
         embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
 
     await ctx.send(embed=embed)
+
+# {'data': [{'id': 'vw34q51m', 'created': '2023-01-29T19:02:22Z', 'status': 'unread', 'text': '<span class="bolder">1 players</span> 
+# got a new PB in <span class="bolder">Team ICO Games Category Extensions SotC : Any% Variations</span>. Their time is <span class="bolder">
+# 99:00:00</span>', 'item': {'rel': 'run', 'uri': 'https://www.speedrun.com/run/4120710'}, 'links': [{'rel': 'run', 'uri': 
+# 'https://www.speedrun.com/api/v1/runs/mee38v9m'}]}], 'pagination': {'offset': 0, 'max': 20, 'size': 1, 'links': []}}
+@tasks.loop(seconds = 60) # repeat after every minute
+async def post_verification():
+    notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()
+    
+    for notification in notifications['data']:
+        notif_time = datetime.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
+        # result 0:32:51.212777
+        if (datetime.now() - notif_time).total_seconds() < 60:
+            print('hello')
+        
+# TODO Ideas
+#
+# Auto assign roles to people who get their runs verified. Would mean people would have to 
+# manually link their SRC accounts, but that can be done when people join the server
+# 
+# Giving the now streaming role when someone in the server streams a TICO game. Could be a role
+# to opt in to this feature, so I dont have to be checking everyone in the world
+#
+# Command that gives all the positions people have in all 3 games and CE
+#
+# Notification every time a run gets validated
 
 if DEV_MODE:
     bot.run(TEST_TOKEN)

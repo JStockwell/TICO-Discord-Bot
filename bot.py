@@ -94,13 +94,14 @@ async def get_wr(ctx):
     wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()
 
     if len(wr['data']['runs']) > 0:
-        await post_run(ctx,game,var,category,wr)
+        await post_run_ugly(ctx,game,var,category,wr,"World Record")
 
     else:
         await ctx.send("No world record found")
 
-async def post_run(ctx,game,var,category,run):
-    embed = discord.Embed(title='World Record', color=discord.Color.random())
+# TODO UGLY UGLY CODE WTF
+async def post_run_ugly(ctx,game,var,category,run,title):
+    embed = discord.Embed(title=title, color=discord.Color.random())
     embed.add_field(name='Game', value=game['name'], inline=False)
     embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=False)
     # Check for variables
@@ -131,10 +132,6 @@ async def post_run(ctx,game,var,category,run):
 
     await ctx.send(embed=embed)
 
-# {'data': [{'id': 'vw34q51m', 'created': '2023-01-29T19:02:22Z', 'status': 'unread', 'text': '<span class="bolder">1 players</span> 
-# got a new PB in <span class="bolder">Team ICO Games Category Extensions SotC : Any% Variations</span>. Their time is <span class="bolder">
-# 99:00:00</span>', 'item': {'rel': 'run', 'uri': 'https://www.speedrun.com/run/4120710'}, 'links': [{'rel': 'run', 'uri': 
-# 'https://www.speedrun.com/api/v1/runs/mee38v9m'}]}], 'pagination': {'offset': 0, 'max': 20, 'size': 1, 'links': []}}
 @tasks.loop(seconds = 60) # repeat after every minute
 async def post_verification():
     notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()
@@ -142,8 +139,18 @@ async def post_verification():
     for notification in notifications['data']:
         notif_time = datetime.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
         # result 0:32:51.212777
-        if (datetime.now() - notif_time).total_seconds() < 60:
-            print('hello')
+        if (datetime.now() - notif_time).total_seconds() >= 60:
+            post_run(notification["links"][0]["uri"])
+
+async def post_run(url):
+    run = requests.get(url).json()["data"]
+    game = requests.get(f"{base_url}games/{run['game']}").json()["data"]
+    # TODO Add IL/Category check
+    category = requests.get(f"{base_url}categories/{run['category']}").json()["data"]
+    
+
+            
+            
         
 # TODO Ideas
 #

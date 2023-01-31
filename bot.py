@@ -147,6 +147,9 @@ async def post_run(url):
     game = requests.get(f"{base_url}games/{run['game']}").json()["data"]
     # TODO Add IL/Category check
     category = requests.get(f"{base_url}categories/{run['category']}").json()["data"]
+
+    for var in run["values"]:
+        variables = request.get(f"{base_url}variables/")
     
 
             

@@ -18,9 +18,10 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
-DEV_MODE = False
+DEV_MODE = True
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
+bot.remove_command('help')
 # TODO Automate game_db creation
 game_db = json.load(open('games.json', 'r'))
 
@@ -54,7 +55,7 @@ async def on_command_error(ctx, error):
 
 ### --- Commands --- ###
 
-@bot.command(name="hello")
+@bot.command(name="hello", help="How are you?")
 async def hello(ctx):
     await ctx.send("Hello!")
 
@@ -64,29 +65,69 @@ async def beginner_help(ctx):
 
 @bot.command(name="socials", help="Link to the TICO Speedruns socials")
 async def socials(ctx):
-    message = "Follow us at!\n"
-    message += "Youtube: https://www.youtube.com/channel/UCMLlkQ8CFV8BqXFz86usFeQ\n"
+    embed = discord.Embed(title="Follow us at!", color=0x00ff00)
+    message = "Youtube: https://www.youtube.com/channel/UCMLlkQ8CFV8BqXFz86usFeQ\n"
     message += "Twitch: https://www.twitch.tv/teamicospeedruns\n"
     message += "Twitter: https://twitter.com/IcoSpeedruns\n"
-    await ctx.send(message)
+
+    embed.add_field(name="", value=message, inline=False)
+    await ctx.send(embed=embed)
+
+@bot.command(name="help", help="List of commands or help with a specific command")
+async def help(ctx, *args):
+    if len(args) == 0:
+        embed = discord.Embed(title="List of commands", color=0x00ff00)
+        embed.add_field(name="", value="If you need to know more about a command, use !help <command>", inline=False)
+        for command in bot.commands:
+            if command.name != "help":
+                embed.add_field(name=command.name, value=command.help, inline=False)
+        await ctx.send(embed=embed)
+    else:
+        bot_command = None
+        for command in bot.commands:
+            if command.name == args[0]:
+                bot_command = command
+                break
+
+        if bot_command is None:
+            await ctx.send("Command not found")
+        else:
+            match bot_command.name:
+                case "wr":
+                    await help_wr(ctx, command.help)
+
+### --- Help --- ###
+async def help_wr(ctx, help):
+    embed = discord.Embed(title=f"WR: {help}", color=0x00ff00)
+    embed.add_field(name="Format", value="!wr <game> <category> <var_1> <var_2>...", inline=False)
+    embed.add_field(name="Example", value="!wr ico co-op 60hz", inline=False)
+
+    embed.add_field(name="Games", value="ico, sotc, sotc(2018), tlg, ce", inline=False)
+
+    ico = "```• any%\n  • 60hz\n  • 50hz\n  • ntsc-u\n• co-op\n  • 60hz\n  • 50hz\n• enlightenment```"
+
+    embed.add_field(name="Ico", value=ico, inline=False)
+
+    await ctx.send(embed=embed)
+
 
 # Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz
 # TODO Add info for people to actually use this lmao
 @bot.command(name="wr", help="Get the world record for a category")
-async def get_wr(ctx):
+async def get_wr(ctx, *args):
     var = []
-    i = 1
-    while i < len(ctx.message.content.split(" ")):
+    i = 0
+    while i < len(args):
         # Get the game id
-        if i == 1:
-            game_name = ctx.message.content.split(" ")[i].lower()
+        if i == 0:
+            game_name = args[i].lower()
         # Get the category id
-        elif i == 2:
-            category = ctx.message.content.split(" ")[i].lower()
+        elif i == 1:
+            category = args[i].lower()
         # Get the category variables
         else:
-            var.append(ctx.message.content.split(" ")[i].lower())
+            var.append(args[i].lower())
         i += 1
 
     game = game_db["data"][game_name]

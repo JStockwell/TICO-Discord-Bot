@@ -30,7 +30,8 @@ game_db = json.load(open('games.json', 'r'))
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
-    post_verification.start()
+    if DEV_MODE:
+        post_verification.start()
 
 @bot.event
 async def on_error(event, *args, **kwargs):

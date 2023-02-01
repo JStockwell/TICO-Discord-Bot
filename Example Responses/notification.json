@@ -1,0 +1,28 @@
+{
+    "data":[
+       {
+          "id":"vw34q51m",
+          "created":"2023-01-29T19:02:22Z",
+          "status":"unread",
+          "text":"<span class=\"bolder\">1 players</span> got a new PB in <span class=\"bolder\">Team ICO Games Category Extensions SotC : Any Variations</span>. Their time is <span class=\"bolder\">99:00:00</span>",
+          "item":{
+             "rel":"run",
+             "uri":"https://www.speedrun.com/run/4120710"
+          },
+          "links":[
+             {
+                "rel":"run",
+                "uri":"https://www.speedrun.com/api/v1/runs/mee38v9m"
+             }
+          ]
+       }
+    ],
+    "pagination":{
+       "offset":0,
+       "max":20,
+       "size":1,
+       "links":[
+          
+       ]
+    }
+ }

@@ -2,382 +2,187 @@
 	"data":{
 		"ico":{
 			"id":"o1yrkr6q",
-			"name":"ICO",
-			"full-game-categories":{
+			"fg":{
 				"any%":{
 					"id":"rklxqxwk",
-					"name":"Any%",
 					"variables":[
 						{
 							"var_id":"yn25reen",
 							"values":{
-								"60hz":{
-									"id":"5lerr0mq",
-									"name":"60hz"
-								},
-								"50hz":{
-									"id":"0q5nnm7q",
-									"name":"50hz"
-								},
-								"ntsc-u":{
-									"id":"4lxppk3q",
-									"name":"PS2 NTSC-U"
-								}
+								"60hz":"5lerr0mq",
+								"50hz":"0q5nnm7q",
+								"ntsc-u":"4lxppk3q"
 							}
 						}
 					]
 				},
 				"co-op":{
 					"id":"ndx53ook",
-					"name":"Co-op",
 					"variables":[
 						{
 							"var_id":"jlzwvzql",
 							"values":{
-								"60hz":{
-									"id":"jq600wvq",
-									"name":"60hz"
-								},
-								"50hz":{
-									"id":"5lmkke8q",
-									"name":"50hz"
-								}
+								"60hz":"jq600wvq",
+								"50hz":"5lmkke8q"
 							}
 						}
 					]
 				},
 				"enlightenment":{
-					"id":"vdox81vd",
-					"name":"Enlightenment",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"vdox81vd"
 				}
 			},
-			"level-categories":{
+			"il":{
 				"60hz":{
-					"id":"9kv89jod",
-					"name":"60hz",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"9kv89jod"
 				},
 				"50hz":{
-					"id":"w20q318d",
-					"name":"50hz",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"w20q318d"
 				}
 			}
 		},
 		"sotc":{
 			"id":"9j1l8v6g",
-			"name":"Shadow of the Colossus (2005)",
-			"full-game-categories":{
+			"fg":{
 				"any%":{
 					"id":"zjdznvdv",
-					"name":"Any%",
 					"variables":[
 						{
 							"var_id":"p85r513n",
 							"values":{
-								"ps2":{
-									"id":"rqvgy75q",
-									"name":"PS2 Original"
-								},
-								"ps3":{
-									"id":"5le9xopq",
-									"name":"PS3 Remaster"
-								}
+								"ps2":"rqvgy75q",
+								"ps3":"5le9xopq"
 							}
 						},
 						{
 							"var_id":"onvjw4mn",
 							"values":{
-								"normal":{
-									"id":"0137xjdl",
-									"name":"Normal"
-								},
-								"hard":{
-									"id":"rqvox07l",
-									"name":"Hard"
-								}
+								"normal":"0137xjdl",
+								"hard":"rqvox07l"
 							}
 						}
 					]
 				},
 				"boss_rush":{
 					"id":"r02qrpky",
-					"name":"Boss Rush",
 					"variables":[
 						{
 							"var_id":"p85r513n",
 							"values":{
-								"ps2":{
-									"id":"rqvgy75q",
-									"name":"PS2 Original"
-								},
-								"ps3":{
-									"id":"5le9xopq",
-									"name":"PS3 Remaster"
-								}
+								"ps2":"rqvgy75q",
+								"ps3":"5le9xopq"
 							}
 						},
 						{
 							"var_id":"ylpe2qd8",
 							"values":{
-								"nta":{
-									"id":"0q5z4mmq",
-									"name":"NTA"
-								},
-								"hta":{
-									"id":"4lxogk2l",
-									"name":"HTA"
-								}
+								"nta":"0q5z4mmq",
+								"hta":"4lxogk2l"
 							}
 						}
 					]
 				},
 				"queens_sword":{
 					"id":"xd1eg0z2",
-					"name":"Any% Queen's Sword",
 					"variables":[
 						{
 							"var_id":"p85r513n",
 							"values":{
-								"ps2":{
-									"id":"rqvgy75q",
-									"name":"PS2 Original"
-								},
-								"ps3":{
-									"id":"5le9xopq",
-									"name":"PS3 Remaster"
-								}
+								"ps2":"rqvgy75q",
+								"ps3":"5le9xopq"
 							}
 						}
 					]
 				}
 			},
-			"level-categories":{
+			"il":{
 				"NTA":{
-					"id":"jzd3qvkn",
-					"name":"Individual Normal Time Attack",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"jzd3qvkn"
 				},
 				"HTA":{
-					"id":"l9kvn8dg",
-					"name":"Individual Hard Time Attack",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"l9kvn8dg"
 				}
 			}
 		},
 		"sotc(2018)":{
 			"id":"y6545p8d",
-			"name":"Shadow of the Colossus (2018)",
-			"full-game-categories":{
+			"fg":{
 				"any%":{
 					"id":"5dw5v55d",
-					"name":"Any%",
 					"variables":[
 						{
 							"var_id":"wl36j6yl",
 							"values":{
-								"easy":{
-									"id":"xqkr6341",
-									"name":"Easy"
-								},
-								"normal":{
-									"id":"gq7nzor1",
-									"name":"Normal"
-								},
-								"hard":{
-									"id":"21gjo6o1",
-									"name":"Hard"
-								}
+								"easy":"xqkr6341",
+								"normal":"gq7nzor1",
+								"hard":"21gjo6o1"
 							}
 						}
 					]
 				},
 				"boss_rush":{
 					"id":"5dw5v75d",
-					"name":"Boss Rush",
 					"variables":[
 						{
 							"var_id":"wle6g628",
 							"values":{
-								"nta":{
-									"id":"jqz6ywk1",
-									"name":"NTA"
-								},
-								"hta":{
-									"id":"klrz6dw1",
-									"name":"HTA"
-								}
+								"nta":"jqz6ywk1",
+								"hta":"klrz6dw1"
 							}
 						}
 					]
 				},
 				"ng+":{
 					"id":"7dg9oqpk",
-					"name":"NG+",
 					"variables":[
 						{
 							"var_id":"kn0jqd3l",
 							"values":{
-								"any%":{
-									"id":"rqvoknyl",
-									"name":"Any%"
-								},
-								"all_glints":{
-									"id":"5lez6x6l",
-									"name":"All Glints"
-								}
+								"any%":"rqvoknyl",
+								"all_glints":"5lez6x6l"
 							}
 						},
 						{
 							"var_id":"6nj4g9pn",
 							"values":{
-								"no_img":{
-									"id":"0137oyyl",
-									"name":"No IMG"
-								},
-								"img":{
-									"id":"zqoo874q",
-									"name":"IMG"
-								}
+								"no_img":"0137oyyl",
+								"img":"zqoo874q"
 							}
 						}
 					]
 				},
-				"platinum": {
-					"id":"zd374nr2",
-					"name":"Platinum",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{}
-						}
-					]	
+				"platinum":{
+					"id":"zd374nr2"
 				},
-				"100%": {
-					"id":"jdz94eg2",
-					"name":"100%",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{}
-						}
-					]	
+				"100%":{
+					"id":"jdz94eg2"
 				}
 			},
-			"level-categories":{
+			"il":{
 				"NTA":{
-					"id":"7kjp4p3k",
-					"name":"Individual Normal Time Attack",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"7kjp4p3k"
 				},
 				"HTA":{
-					"id":"xk9g1gvd",
-					"name":"Individual Hard Time Attack",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"xk9g1gvd"
 				}
 			}
 		},
 		"tlg":{
 			"id":"j1nvyx6p",
-			"name":"The Last Guardian",
-			"full-game-categories":{
+			"fg":{
 				"any%":{
-					"id":"vdoqqy9k",
-					"name":"Any%",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-
-							}
-						}
-					]
+					"id":"vdoqqy9k"
 				},
 				"all_barrels":{
-					"id":"7dgnvv72",
-					"name":"All Barrels",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-
-							}
-						}
-					]
+					"id":"7dgnvv72"
 				},
-				"platinum": {
-					"id":"7kj86xgd",
-					"name":"Platinum%",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{}
-						}
-					]	
+				"platinum":{
+					"id":"7kj86xgd"
 				}
 			},
-			"level-categories":{
+			"il":{
 				"il":{
-					"id":"rkl5qpr2",
-					"name":"Individual Levels",
-					"variables":[
-						{
-							"var_id":"",
-							"values":{
-								
-							}
-						}
-					]
+					"id":"rkl5qpr2"
 				}
 			}
 		},

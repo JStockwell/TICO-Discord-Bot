@@ -1,0 +1,62 @@
+{
+    "data":[
+       {
+          "id":"yn25reen",
+          "name":"Game Version",
+          "category":"rklxqxwk",
+          "scope":{
+             "type":"full-game"
+          },
+          "mandatory":true,
+          "user-defined":false,
+          "obsoletes":true,
+          "values":{
+             "_note":"`choices` is deprecated, please use `values` instead",
+             "choices":{
+                "5lerr0mq":"60hz",
+                "0q5nnm7q":"50hz",
+                "4lxppk3q":"PS2 NTSC-U"
+             },
+             "values":{
+                "5lerr0mq":{
+                   "label":"60hz",
+                   "rules":"**Allowed game versions/platforms:**  \r\n· PS3  \r\n· PS2 NTSC-J  \r\n· PS2 PAL on 60hz Mode (refer to Game Rules for clarification)\r\n\r\nNew Game+ runs are invalid for this category.\r\n\r\n**Timer start:**  \r\nPS3: Upon pressing \"New Game\"  \r\nPS2: Upon pressing \"Yes\" or \"No\" on Vibration menu.  \r\nTimer stops on the frame the camera shifts to show Ico and Yorda on the final cutscene at the beach.\r\n\r\nQuitting the game and reloading a save is not allowed at any point of the run.\r\n\r\nEmulators are banned.  \r\nVideo proof is required for every submission.  \r\nYour video MUST show the total in-game time at the end by saving the game to be verified.",
+                   "flags":{
+                      "miscellaneous":false
+                   }
+                },
+                "0q5nnm7q":{
+                   "label":"50hz",
+                   "rules":"**Allowed game versions/platforms:**  \r\n· PS2 PAL on 50hz Mode (refer to Game Rules for clarification)\r\n\r\nNew Game+ runs are invalid for this category.\r\n\r\nTimer starts upon pressing \"Yes\" or \"No\" on Vibration menu.  \r\nTimer stops on the frame the camera shifts to show Ico and Yorda on the final cutscene at the beach.\r\n\r\nQuitting the game and reloading a save is not allowed at any point of the run.\r\n\r\nEmulators are banned.  \r\nVideo proof is required for every submission.  \r\nYour video MUST show the total in-game time at the end by saving the game to be verified.",
+                   "flags":{
+                      "miscellaneous":false
+                   }
+                },
+                "4lxppk3q":{
+                   "label":"PS2 NTSC-U",
+                   "rules":"**Allowed game versions/platforms:**  \r\n· PS2 NTSC-U\r\n\r\nTimer starts upon pressing \"Yes\" or \"No\" on Vibration menu.  \r\nTimer stops on the frame the camera shifts to show Ico and Yorda on the final cutscene at the beach.  \r\nIGT is not required for this category.\r\n\r\nEmulators are banned.  \r\nVideo proof is required for every submission.",
+                   "flags":{
+                      "miscellaneous":false
+                   }
+                }
+             },
+             "default":"5lerr0mq"
+          },
+          "is-subcategory":true,
+          "links":[
+             {
+                "rel":"self",
+                "uri":"https://www.speedrun.com/api/v1/variables/yn25reen"
+             },
+             {
+                "rel":"game",
+                "uri":"https://www.speedrun.com/api/v1/games/o1yrkr6q"
+             },
+             {
+                "rel":"category",
+                "uri":"https://www.speedrun.com/api/v1/categories/rklxqxwk"
+             }
+          ]
+       }
+    ]
+ }

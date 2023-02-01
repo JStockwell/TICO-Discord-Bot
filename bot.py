@@ -8,6 +8,7 @@ import Paginator
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from datetime import datetime as dt
+from tinydb import TinyDB, Query
 
 ### --- REST api Initialization --- ###
 
@@ -19,12 +20,14 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
+TINYDB_PATH = os.getenv('TINYDB_PATH')
 DEV_MODE = True
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
 # TODO Automate game_db creation
 game_db = json.load(open('games.json', 'r'))
+db = TinyDB(TINYDB_PATH)
 
 ### --- Functions --- ###
 
@@ -146,7 +149,6 @@ def help_wr_embed():
 
 # Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz
-# TODO Add info for people to actually use this lmao
 @bot.command(name="wr", help="Get the world record for a category")
 async def get_wr(ctx, *args):
     var = []
@@ -257,10 +259,39 @@ async def post_verification():
             if len(run.keys())==1:
                 channel_id = channel_lookup[run['data']['game']]
                 print(f"New run validated for {run['data']['game']}")
+                runner_role(run['data']['players'])
                 if DEV_MODE:
                     await post_run(1068245117544169545, run['data'], "Run Verified!")
                 else:
                     await post_run(channel_id, run['data'], "Run Verified!")
+
+def runner_role(players):
+    for player in players:
+        if player["rel"]=="user":
+            table = db.table('users')
+            user = table.search(Query().src == player["id"])
+
+# Link SRC account to a Discord account
+@bot.command(name="src", help="Set your SRC account")
+async def src(ctx, *args):
+    if len(args) != 1:
+        await ctx.send("Please provide your SRC account name")
+        return
+    account = args[0]
+    user = requests.get(f"{base_url}users/{account}").json()
+    if len(user.keys()) == 1:
+        # TODO Save to database
+        table = db.table('users')
+        user = table.search(Query().discord == ctx.author.id)
+        if len(user) == 0:
+            table.insert({'discord': ctx.author.id, 'src': account})
+        else:
+            table.update({'src': account}, Query().discord == ctx.author.id)
+
+        print(db)
+        await ctx.send(f"Your SRC account has been set to {account}")
+    else:
+        await ctx.send(f"Could not find account {account}")
 
 
 # TODO Ideas

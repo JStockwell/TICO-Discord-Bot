@@ -94,6 +94,18 @@ async def help(ctx, *args):
             match bot_command.name:
                 case "wr":
                     await help_wr(ctx, command.help)
+                case "hello":
+                    embed = discord.Embed(title=f"Hello: {command.help}", color=0x00ff00)
+                    embed.add_field(name="", value="Why do you need help with a simple hello? :(", inline=False)
+                    await ctx.send(embed=embed)
+                case "beginnerhelp":
+                    embed = discord.Embed(title=f"Beginnerhelp: {command.help}", color=0x00ff00)
+                    embed.add_field(name="", value="I am in your walls.", inline=False)
+                    await ctx.send(embed=embed)
+                case "socials":
+                    embed = discord.Embed(title=f"Socials: {command.help}", color=0x00ff00)
+                    embed.add_field(name="", value="Don't forget to follow!", inline=False)
+                    await ctx.send(embed=embed)
 
 ### --- Help --- ###
 async def help_wr(ctx, help):
@@ -124,7 +136,6 @@ async def help_wr(ctx, help):
     embed.add_field(name="The Last Guardian", value=tlg, inline=False)
 
     await ctx.send(embed=embed)
-
 
 # Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz

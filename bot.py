@@ -113,7 +113,7 @@ async def help(ctx, *args):
 
 ### --- Help --- ###
 async def help_wr(ctx, help):
-    embed1 = help_wr_embed()
+    embed1 = help_wr_embed(help)
 
     ico = "```• Any%\n  • Version:\n    • 60hz\n    • 50hz\n    • ntsc-u\n"
     ico += "• Co-Op\n  • Version:\n    • 60hz\n    • 50hz\n"
@@ -125,7 +125,7 @@ async def help_wr(ctx, help):
     sotc += "• Queens_Sword```"
     embed1.add_field(name="Shadow of the Colossus", value=sotc, inline=False)
 
-    embed2 = help_wr_embed()
+    embed2 = help_wr_embed(help)
     sotc2018 = "```• Any%\n  • Difficulty:\n    • Easy\n    • Normal\n    • Hard\n"
     sotc2018 += "• Boss_Rush\n  • Difficulty:\n    • NTA\n    • HTA\n"
     sotc2018 += "• NG+\n  • Sub-Category:\n    • Any%\n    • All_Glints\n  • Item Menu Glitch\n    • No_IMG\n    • IMG\n"
@@ -137,7 +137,7 @@ async def help_wr(ctx, help):
 
     await Paginator.Simple().start(ctx, pages=[embed1, embed2])
 
-def help_wr_embed():
+def help_wr_embed(help):
     embed = discord.Embed(title=f"WR: {help}", color=0x00ff00)
     embed.add_field(name="Format", value="`!wr <game> <category> <var_1> <var_2>...`", inline=False)
     embed.add_field(name="Example", value="`!wr ico co-op 60hz`", inline=False)

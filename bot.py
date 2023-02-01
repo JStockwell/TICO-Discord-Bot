@@ -7,7 +7,7 @@ import datetime
 
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
-from datetime import datetime
+from datetime import datetime as dt
 
 ### --- REST api Initialization --- ###
 
@@ -22,6 +22,7 @@ SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 DEV_MODE = True
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
+# TODO Automate game_db creation
 game_db = json.load(open('games.json', 'r'))
 
 ### --- Functions --- ###
@@ -73,87 +74,89 @@ async def socials(ctx):
 @bot.command(name="wr", help="Get the world record for a category")
 async def get_wr(ctx):
     var = []
-    # Get the game id
-    game_name = ctx.message.content.split(" ")[1]
-    # Get the category id
-    category = ctx.message.content.split(" ")[2]
-    # Get the category variable 1
-    if len(ctx.message.content.split(" ")) > 3:
-        i = 3
-        while i < len(ctx.message.content.split(" ")):
+    i = 1
+    while i < len(ctx.message.content.split(" ")):
+        # Get the game id
+        if i == 1:
+            game_name = ctx.message.content.split(" ")[i]
+        # Get the category id
+        elif i == 2:
+            category = ctx.message.content.split(" ")[i]
+        # Get the category variables
+        else:
             var.append(ctx.message.content.split(" ")[i])
-            i += 1
+        i += 1
 
     game = game_db["data"][game_name]
 
-    url = f"{base_url}leaderboards/{game['id']}/category/{game['full-game-categories'][category]['id']}?top=1&embed=players"
+    url = f"{base_url}leaderboards/{game['id']}/category/{game['fg'][category]['id']}?top=1&embed=players"
     i = 0
     for v in var:
-        url += f"&var-{game['full-game-categories'][category]['variables'][i]['var_id']}={game['full-game-categories'][category]['variables'][i]['values'][v]['id']}"
+        url += f"&var-{game['fg'][category]['variables'][i]['var_id']}={game['fg'][category]['variables'][i]['values'][v]}"
         i += 1
-    wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()
+    wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
 
-    if len(wr['data']['runs']) > 0:
-        await post_run_ugly(ctx,game,var,category,wr,"World Record")
+    if len(wr['runs']) > 0:
+        await post_run(ctx.message.channel.id, f"{base_url}runs/{wr['runs'][0]['run']['id']}", "World Record")
 
     else:
         await ctx.send("No world record found")
 
-# TODO UGLY UGLY CODE WTF
-async def post_run_ugly(ctx,game,var,category,run,title):
-    embed = discord.Embed(title=title, color=discord.Color.random())
-    embed.add_field(name='Game', value=game['name'], inline=False)
-    embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=False)
-    # Check for variables
-    variable_text = ""
-    i = 0
-    for v in var:
-        variable_text += f"{game['full-game-categories'][category]['variables'][i]['values'][v]['name']}, "
-        i += 1
-    if variable_text != "":
-        embed.add_field(name='Variable/s', value=variable_text[:-2], inline=False)
-    # Check for Private User
-    if run['data']['runs'][0]['run']['players'][0]['rel'] == 'guest':
-        embed.add_field(name='Runner', value=run['data']['runs'][0]['run']['players'][0]['name'], inline=False)
-    else:
-        player_names = ""
-        for player in run['data']['runs'][0]['run']['players']:
-            player_names += requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international'] + ", "
-        embed.add_field(name='Runner/s', value=player_names[:-2], inline=False)
-    primary = run['data']['runs'][0]['run']['times']['primary_t']
-    realtime = run['data']['runs'][0]['run']['times']['realtime_t']
-    primary_time = str(datetime.timedelta(seconds=primary))
-    if primary_time[-4:] == "0000":
-        embed.add_field(name='Time', value=primary_time[:-4], inline=True)
-    else:
-        embed.add_field(name='Time', value=primary_time, inline=True)
-    if realtime != run['data']['runs'][0]['run']['times']['primary_t']:
-        embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
-
-    await ctx.send(embed=embed)
-
-@tasks.loop(seconds = 60) # repeat after every minute
-async def post_verification():
-    notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()
-    
-    for notification in notifications['data']:
-        notif_time = datetime.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
-        # result 0:32:51.212777
-        if (datetime.now() - notif_time).total_seconds() >= 60:
-            post_run(notification["links"][0]["uri"])
-
-async def post_run(url):
+async def post_run(channel_id, url, title):
     run = requests.get(url).json()["data"]
     game = requests.get(f"{base_url}games/{run['game']}").json()["data"]
     # TODO Add IL/Category check
     category = requests.get(f"{base_url}categories/{run['category']}").json()["data"]
 
+    var_names=[]
     for var in run["values"]:
-        variables = request.get(f"{base_url}variables/")
-    
+        variables = requests.get(f"{base_url}variables/{var}").json()["data"]
+        name = variables["name"]
+        name += ": " + variables["values"]["values"][run["values"][var]]["label"]
+        var_names.append(name)
 
-            
-            
+    embed = discord.Embed(title=title, color=discord.Color.random())
+    embed.add_field(name='Game', value=game['names']['international'], inline=False)
+    embed.add_field(name='Category', value=category['name'], inline=False)
+    # Check for variables
+    if len(var_names) > 0:
+        embed.add_field(name='Variable/s', value=", ".join(var_names), inline=False)
+
+    players = []
+    for player in run['players']:
+        if player['rel'] == 'guest':
+            players.append(player['name'])
+        else:
+            players.append(requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international'])
+    embed.add_field(name='Runner/s', value=", ".join(players), inline=False)
+
+    primary = run['times']['primary_t']
+    realtime = run['times']['realtime_t']
+    primary_time = str(datetime.timedelta(seconds=primary))
+
+    if primary_time[-4:] == "0000":
+        embed.add_field(name='Time', value=primary_time[:-4], inline=True)
+    else:
+        embed.add_field(name='Time', value=primary_time, inline=True)
+
+    if realtime != run['times']['primary_t']:
+        embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
+
+    channel = bot.get_channel(channel_id)
+    await channel.send(embed=embed)
+
+@tasks.loop(seconds = 60) # repeat after every minute
+async def post_verification():
+    notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
+    
+    for notification in notifications:
+        notif_time = dt.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
+        # result 0:32:51.212777
+        if (dt.now() - notif_time).total_seconds() < 60:
+            # TODO Add channel id based on game
+            channel_id = 0
+            await post_run(channel_id, notification["links"][0]["uri"], "Run Verified")
+
         
 # TODO Ideas
 #

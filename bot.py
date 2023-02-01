@@ -3,6 +3,7 @@ import discord
 import requests
 import json
 import datetime
+import Paginator
 
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
@@ -109,6 +110,31 @@ async def help(ctx, *args):
 
 ### --- Help --- ###
 async def help_wr(ctx, help):
+    embed1 = help_wr_embed()
+
+    ico = "```• Any%\n  • Version:\n    • 60hz\n    • 50hz\n    • ntsc-u\n"
+    ico += "• Co-Op\n  • Version:\n    • 60hz\n    • 50hz\n"
+    ico += "• Enlightenment```"
+    embed1.add_field(name="Ico", value=ico, inline=False)
+
+    sotc = "```• Any%\n  • Version:\n   • PS2\n    • PS3\n  • Difficulty:\n    • Normal\n    • Hard\n"
+    sotc += "• Boss_Rush\n  • Version:\n    • PS2\n    • PS3\n  • Difficulty:\n    • NTA\n    • HTA\n"
+    sotc += "• Queens_Sword```"
+    embed1.add_field(name="Shadow of the Colossus", value=sotc, inline=False)
+
+    embed2 = help_wr_embed()
+    sotc2018 = "```• Any%\n  • Difficulty:\n    • Easy\n    • Normal\n    • Hard\n"
+    sotc2018 += "• Boss_Rush\n  • Difficulty:\n    • NTA\n    • HTA\n"
+    sotc2018 += "• NG+\n  • Sub-Category:\n    • Any%\n    • All_Glints\n  • Item Menu Glitch\n    • No_IMG\n    • IMG\n"
+    sotc2018 += "• Platinum\n• 100%```"
+    embed2.add_field(name="Shadow of the Colossus (2018)", value=sotc2018, inline=False)
+
+    tlg = "```• Any%\n• All_Barrels\n• Platinum```"
+    embed2.add_field(name="The Last Guardian", value=tlg, inline=False)
+
+    await Paginator.Simple().start(ctx, pages=[embed1, embed2])
+
+def help_wr_embed():
     embed = discord.Embed(title=f"WR: {help}", color=0x00ff00)
     embed.add_field(name="Format", value="`!wr <game> <category> <var_1> <var_2>...`", inline=False)
     embed.add_field(name="Example", value="`!wr ico co-op 60hz`", inline=False)
@@ -116,26 +142,7 @@ async def help_wr(ctx, help):
     embed.add_field(name="Games", value="`ico, sotc, sotc(2018), tlg, ce`", inline=False)
     embed.add_field(name="__Categories For Each Game__", value="", inline=False)
 
-    ico = "```• Any%\n  • Version:\n    • 60hz\n    • 50hz\n    • ntsc-u\n"
-    ico += "• Co-Op\n  • Version:\n    • 60hz\n    • 50hz\n"
-    ico += "• Enlightenment```"
-    embed.add_field(name="Ico", value=ico, inline=False)
-
-    sotc = "```• Any%\n  • Version:\n   • PS2\n    • PS3\n  • Difficulty:\n    • Normal\n    • Hard\n"
-    sotc += "• Boss_Rush\n  • Version:\n    • PS2\n    • PS3\n  • Difficulty:\n    • NTA\n    • HTA\n"
-    sotc += "• Queens_Sword```"
-    embed.add_field(name="Shadow of the Colossus", value=sotc, inline=False)
-
-    sotc2018 = "```• Any%\n  • Difficulty:\n    • Easy\n    • Normal\n    • Hard\n"
-    sotc2018 += "• Boss_Rush\n  • Difficulty:\n    • NTA\n    • HTA\n"
-    sotc2018 += "• NG+\n  • Sub-Category:\n    • Any%\n    • All_Glints\n  • Item Menu Glitch\n    • No_IMG\n    • IMG\n"
-    sotc2018 += "• Platinum\n• 100%```"
-    embed.add_field(name="Shadow of the Colossus (2018)", value=sotc2018, inline=False)
-
-    tlg = "```• Any%\n• All_Barrels\n• Platinum```"
-    embed.add_field(name="The Last Guardian", value=tlg, inline=False)
-
-    await ctx.send(embed=embed)
+    return embed
 
 # Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz

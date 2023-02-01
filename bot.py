@@ -1,7 +1,6 @@
 import os
 import discord
 import requests
-import asyncio
 import json
 import datetime
 
@@ -43,10 +42,12 @@ async def on_error(event, *args, **kwargs):
 
 @bot.event
 async def on_command_error(ctx, error):
-    message = ""
+    message = " "
 
     if DEV_MODE:
         message += f'\n{error}'
+    else:
+        message += f'An error has occurred, please try again!'
 
     print(error)
     await ctx.send(message)
@@ -69,7 +70,7 @@ async def socials(ctx):
     message += "Twitter: https://twitter.com/IcoSpeedruns\n"
     await ctx.send(message)
 
-# Format: !wr <game> <category> <var_1> <var_2>
+# Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz
 # TODO Add info for people to actually use this lmao
 @bot.command(name="wr", help="Get the world record for a category")
@@ -79,13 +80,13 @@ async def get_wr(ctx):
     while i < len(ctx.message.content.split(" ")):
         # Get the game id
         if i == 1:
-            game_name = ctx.message.content.split(" ")[i]
+            game_name = ctx.message.content.split(" ")[i].lower()
         # Get the category id
         elif i == 2:
-            category = ctx.message.content.split(" ")[i]
+            category = ctx.message.content.split(" ")[i].lower()
         # Get the category variables
         else:
-            var.append(ctx.message.content.split(" ")[i])
+            var.append(ctx.message.content.split(" ")[i].lower())
         i += 1
 
     game = game_db["data"][game_name]
@@ -98,26 +99,38 @@ async def get_wr(ctx):
     wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
 
     if len(wr['runs']) > 0:
-        await post_run(ctx.message.channel.id, f"{base_url}runs/{wr['runs'][0]['run']['id']}", "World Record")
+        run = requests.get(f"{base_url}runs/{wr['runs'][0]['run']['id']}").json()["data"]
+        await post_run(ctx.message.channel.id, run, "World Record")
 
     else:
         await ctx.send("No world record found")
 
-async def post_run(channel_id, url, title):
-    run = requests.get(url).json()["data"]
+async def post_run(channel_id, run, title):
     game = requests.get(f"{base_url}games/{run['game']}").json()["data"]
     # TODO Add IL/Category check
     category = requests.get(f"{base_url}categories/{run['category']}").json()["data"]
 
     var_names=[]
+    url_variables = ""
     for var in run["values"]:
+        # Preparing the variable for visualization
         variables = requests.get(f"{base_url}variables/{var}").json()["data"]
         name = variables["name"]
         name += ": " + variables["values"]["values"][run["values"][var]]["label"]
         var_names.append(name)
 
+        # Building the url for the leaderboard filtering to improve performance
+        url_variables += f"&var-{variables['id']}={run['values'][var]}"
+
+    leaderboard = requests.get(f"{base_url}leaderboards/{game['id']}/category/{category['id']}?{url_variables[1:]}").json()["data"]
+    for lrun in leaderboard["runs"]:
+        if lrun["run"]["id"] == run["id"]:
+            place = lrun["place"]
+            break
+
     embed = discord.Embed(title=title, color=discord.Color.random())
-    embed.add_field(name='Game', value=game['names']['international'], inline=False)
+    embed.add_field(name='Game', value=game['names']['international'], inline=True)
+    embed.add_field(name='Position', value=place, inline=True)
     embed.add_field(name='Category', value=category['name'], inline=False)
     # Check for variables
     if len(var_names) > 0:
@@ -143,22 +156,36 @@ async def post_run(channel_id, url, title):
     if realtime != run['times']['primary_t']:
         embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
 
+    embed.add_field(name="Link", value=run['weblink'], inline=False)
+
     channel = bot.get_channel(channel_id)
     await channel.send(embed=embed)
 
-@tasks.loop(seconds = 60) # repeat after every minute
+# Change to your desired channels
+channel_lookup = {
+    "o1yrkr6q": 155845329957158912,
+    "9j1l8v6g": 155844832185548800,
+    "y6545p8d": 155844832185548800,
+    "j1nvyx6p": 155845509146345473
+}
+
+@tasks.loop(seconds = 300) # repeat after every five minutes
 async def post_verification():
     notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
-    
     for notification in notifications:
         notif_time = dt.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
-        # result 0:32:51.212777
-        if (dt.now() - notif_time).total_seconds() < 60:
+        if (dt.utcnow() - notif_time).total_seconds() <= 300:
             # TODO Add channel id based on game
-            channel_id = 0
-            await post_run(channel_id, notification["links"][0]["uri"], "Run Verified")
+            run = requests.get(notification["links"][0]["uri"]).json()
+            if len(run.keys())==1:
+                channel_id = channel_lookup[run['data']['game']]
+                print("New run validated")
+                if DEV_MODE:
+                    await post_run(1068245117544169545, run['data'], "Run Verified!")
+                else:
+                    await post_run(channel_id, run['data'], "Run Verified!")
 
-        
+
 # TODO Ideas
 #
 # Auto assign roles to people who get their runs verified. Would mean people would have to 

@@ -19,7 +19,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
-DEV_MODE = True
+DEV_MODE = False
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 # TODO Automate game_db creation

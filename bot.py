@@ -21,7 +21,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
-DEV_MODE = True
+DEV_MODE = False
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
@@ -55,6 +55,15 @@ async def on_command_error(ctx, error):
 
     print(error)
     await ctx.send(message)
+
+class switch(object):
+    value = None
+    def __new__(class_, value):
+        class_.value = value
+        return True
+
+def case(*args):
+    return any((arg == switch.value for arg in args))
 
 ### --- Commands --- ###
 
@@ -95,21 +104,40 @@ async def help(ctx, *args):
         if bot_command is None:
             await ctx.send("Command not found")
         else:
-            match bot_command.name:
-                case "wr":
-                    await help_wr(ctx, command.help)
-                case "hello":
-                    embed = discord.Embed(title=f"Hello: {command.help}", color=0x00ff00)
-                    embed.add_field(name="", value="Why do you need help with a simple hello? :(", inline=False)
-                    await ctx.send(embed=embed)
-                case "beginnerhelp":
-                    embed = discord.Embed(title=f"Beginnerhelp: {command.help}", color=0x00ff00)
-                    embed.add_field(name="", value="I am in your walls.", inline=False)
-                    await ctx.send(embed=embed)
-                case "socials":
-                    embed = discord.Embed(title=f"Socials: {command.help}", color=0x00ff00)
-                    embed.add_field(name="", value="Don't forget to follow!", inline=False)
-                    await ctx.send(embed=embed)
+            await help_command(ctx, bot_command)
+
+async def help_command(ctx, command):
+    while switch(command.name):
+        if case("wr"):
+            await help_wr(ctx, command.help)
+            break
+        
+        if case("hello"):
+            embed = discord.Embed(title=f"Hello: {command.help}", color=0x00ff00)
+            embed.add_field(name="", value="Why do you need help with a simple hello? :(", inline=False)
+            await ctx.send(embed=embed)
+            break
+
+        if case("beginnerhelp"):
+            embed = discord.Embed(title=f"Beginnerhelp: {command.help}", color=0x00ff00)
+            embed.add_field(name="", value="I am in your walls.", inline=False)
+            await ctx.send(embed=embed)
+            break
+
+        if case("socials"):
+            embed = discord.Embed(title=f"Socials: {command.help}", color=0x00ff00)
+            embed.add_field(name="", value="Don't forget to follow!", inline=False)
+            await ctx.send(embed=embed)
+            break
+
+        if case("src"):
+            embed = discord.Embed(title=f"SRC: {command.help}", color=0x00ff00)
+            embed.add_field(name="", value="Links your Discord to your SRC account (WIP!)", inline=False)
+            embed.add_field(name="", value="Format: !src <SRC Account Name>", inline=False)
+            await ctx.send(embed=embed)
+            break
+
+        await ctx.send("Command not found")
 
 ### --- Help --- ###
 async def help_wr(ctx, help):
@@ -259,17 +287,10 @@ async def post_verification():
             if len(run.keys())==1:
                 channel_id = channel_lookup[run['data']['game']]
                 print(f"New run validated for {run['data']['game']}")
-                runner_role(run['data']['players'])
                 if DEV_MODE:
                     await post_run(1068245117544169545, run['data'], "Run Verified!")
                 else:
                     await post_run(channel_id, run['data'], "Run Verified!")
-
-def runner_role(players):
-    for player in players:
-        if player["rel"]=="user":
-            table = db.table('users')
-            user = table.search(Query().src == player["id"])
 
 # Link SRC account to a Discord account
 @bot.command(name="src", help="Set your SRC account")
@@ -281,18 +302,23 @@ async def src(ctx, *args):
     user = requests.get(f"{base_url}users/{account}").json()
     if len(user.keys()) == 1:
         # TODO Save to database
-        table = db.table('users')
-        user = table.search(Query().discord == ctx.author.id)
-        if len(user) == 0:
-            table.insert({'discord': ctx.author.id, 'src': account})
-        else:
-            table.update({'src': account}, Query().discord == ctx.author.id)
-
-        print(db)
-        await ctx.send(f"Your SRC account has been set to {account}")
+        await validate_user(ctx.author.id, account)
     else:
         await ctx.send(f"Could not find account {account}")
 
+async def validate_user(discord_id, account):
+    table = db.table('src_validation')
+    user = table.search(Query().discord == discord_id)
+    if len(user) == 0:
+        dm = await bot.get_user(discord_id).create_dm()
+        await dm.send(f"Ligma balls {account}")
+
+#table = db.table('users')
+#    user = table.search(Query().discord == ctx.author.id)
+#    if len(user) == 0:
+#        table.insert({'discord': ctx.author.id, 'src': account})
+#    else:
+#        table.update({'src': account}, Query().discord == ctx.author.id)
 
 # TODO Ideas
 #

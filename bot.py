@@ -21,7 +21,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
-DEV_MODE = False
+DEV_MODE = True
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
@@ -111,33 +111,25 @@ async def help_command(ctx, command):
         if case("wr"):
             await help_wr(ctx, command.help)
             break
-        
         if case("hello"):
-            embed = discord.Embed(title=f"Hello: {command.help}", color=0x00ff00)
-            embed.add_field(name="", value="Why do you need help with a simple hello? :(", inline=False)
-            await ctx.send(embed=embed)
+            await generic_help(ctx, command, "Hello", ["Why do you need help with a simple hello? :("])
             break
-
         if case("beginnerhelp"):
-            embed = discord.Embed(title=f"Beginnerhelp: {command.help}", color=0x00ff00)
-            embed.add_field(name="", value="I am in your walls.", inline=False)
-            await ctx.send(embed=embed)
+            await generic_help(ctx, command, "Beginnerhelp", ["I am in your walls."])
             break
-
         if case("socials"):
-            embed = discord.Embed(title=f"Socials: {command.help}", color=0x00ff00)
-            embed.add_field(name="", value="Don't forget to follow!", inline=False)
-            await ctx.send(embed=embed)
+            await generic_help(ctx, command, "Socials", ["Don't forget to follow!"])
             break
-
         if case("src"):
-            embed = discord.Embed(title=f"SRC: {command.help}", color=0x00ff00)
-            embed.add_field(name="", value="Links your Discord to your SRC account (WIP!)", inline=False)
-            embed.add_field(name="", value="Format: !src <SRC Account Name>", inline=False)
-            await ctx.send(embed=embed)
+            await generic_help(ctx, command, "SRC", ["Links your Discord to your SRC account (WIP!)", "Format: !src <SRC Account Name>"])
             break
-
         await ctx.send("Command not found")
+
+async def generic_help(ctx, command, title, description):
+    embed = discord.Embed(title=f"{title}: {command.help}", color=0x00ff00)
+    for field in description:
+        embed.add_field(name="", value=field, inline=False)
+    await ctx.send(embed=embed)
 
 ### --- Help --- ###
 async def help_wr(ctx, help):

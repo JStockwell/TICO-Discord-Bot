@@ -100,8 +100,26 @@ async def on_command_error(ctx, error):
     await ctx.send(message)
 
 @bot.event
-async def on_reaction_add(reaction, user):
-    gender_role(reaction, user)
+async def on_raw_reaction_add(payload):
+    await handle_reaction(payload, False)
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+    await handle_reaction(payload, True)
+
+async def handle_reaction(payload, remove):
+    message_id = payload.message_id
+    emoji_id = payload.emoji.id
+    guild = bot.get_guild(payload.guild_id)
+    user = guild.get_member(payload.user_id)
+
+    if DEV_MODE:
+        await test_modify_role(message_id, emoji_id, guild, user, remove)
+
+    # TODO Add these functions
+    # await alert_modify_role(message_id, emoji_id, guild, user, remove)
+    # await pronouns_modify_role(message_id, emoji_id, guild, user, remove)
+    # await member_modify_role(message_id, emoji_id, guild, user, remove)
 
 class switch(object):
     value = None
@@ -353,10 +371,16 @@ async def validate_user(discord_id, account):
 #    else:
 #        table.update({'src': account}, Query().discord == ctx.author.id)
 
-async def gender_role(reaction, user):
-    channel = bot.get_channel(GUIDELINES_CHANNEL)
+async def test_modify_role(message_id, emoji_id, guild, user, remove):
+    target_message_id = 1071148440895115314
+    target_emoji_id = 822869417930653709
 
-
+    if message_id == target_message_id and emoji_id == target_emoji_id and user != bot.user:
+        role = discord.utils.get(guild.roles, name="Test")
+        if remove:
+            await user.remove_roles(role)
+        else:
+            await user.add_roles(role)
 
 # TODO Ideas
 #

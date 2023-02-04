@@ -63,7 +63,6 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
-GUIDELINES_CHANNEL = os.getenv('GUIDELINES_CHANNEL')
 DEV_MODE = True
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
@@ -78,6 +77,7 @@ db = TinyDB(TINYDB_PATH)
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     post_verification.start()
+    await base_reactions()
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -110,16 +110,79 @@ async def on_raw_reaction_remove(payload):
 async def handle_reaction(payload, remove):
     message_id = payload.message_id
     emoji_id = payload.emoji.id
+    emoji = payload.emoji.name
     guild = bot.get_guild(payload.guild_id)
     user = guild.get_member(payload.user_id)
 
+    custom_payload = [message_id, emoji_id, emoji, user, guild, remove]
+
     if DEV_MODE:
-        await test_modify_role(message_id, emoji_id, guild, user, remove)
+        # Standard !
+        await modify_role(custom_payload, 1071148440895115314, "❗", "Standard Test")
+        # Custom OK
+        await modify_role(custom_payload, 1071148440895115314, 822869417930653709, "Custom Test")
 
     # TODO Add these functions
-    # await alert_modify_role(message_id, emoji_id, guild, user, remove)
-    # await pronouns_modify_role(message_id, emoji_id, guild, user, remove)
-    # await member_modify_role(message_id, emoji_id, guild, user, remove)
+    # Alert
+    await modify_role(custom_payload, 929064886300971078, "❗", "Alert")
+    # Pronouns
+    await pronouns_modify_role(custom_payload)
+    await modify_role(custom_payload, 929065214761123840, "👍", "Member")
+
+# custom_payload = [message_id, emoji_id, emoji, user, guild, remove]
+async def modify_role(payload, target_message_id, target_emoji, role_name):
+    if payload[0] == target_message_id and (payload[1] == target_emoji or payload[2] == target_emoji) and payload[3] != bot.user:
+        await exe_modify_role(payload[3], payload[4], payload[5], role_name)
+
+async def pronouns_modify_role(payload):
+    # She/Her, He/Him, They/Them
+    emojis = [937812173596540978, 937812173672038420, 937811380512374874]
+    if payload[0] == 929065103687573544 and (payload[1] in emojis) and payload[3] != bot.user:
+        if payload[1] == emojis[0]:
+            await exe_modify_role(payload[3], payload[4], payload[5], "she/her")
+        elif payload[1] == emojis[1]:
+            await exe_modify_role(payload[3], payload[4], payload[5], "he/him")
+        else:
+            await exe_modify_role(payload[3], payload[4], payload[5], "they/them")
+
+async def exe_modify_role(user, guild, remove, role_name):
+    role = discord.utils.get(guild.roles, name=role_name)
+    if remove:
+        await user.remove_roles(role)
+    else:
+        await user.add_roles(role)
+
+async def base_reactions():
+    guild = bot.get_guild(155844173591740416)
+    messages = []
+    emotes = []
+
+    if DEV_MODE:
+        test_channel = bot.get_channel(1068245117544169545)
+        for i in range(2):
+            messages.append(await test_channel.fetch_message(1071148440895115314))
+        emotes.append("❗")
+        emotes.append(await guild.fetch_emoji(822869417930653709))
+
+    guidelines = bot.get_channel(848973738190831697)
+
+    # Alert
+    messages.append(await guidelines.fetch_message(929064886300971078))
+    emotes.append("❗")
+
+    # Pronouns
+    for i in range(3):
+        messages.append(await guidelines.fetch_message(929065103687573544))
+    emotes.append(await guild.fetch_emoji(937812173596540978))
+    emotes.append(await guild.fetch_emoji(937812173672038420))
+    emotes.append(await guild.fetch_emoji(937811380512374874))
+
+    # Member
+    messages.append(await guidelines.fetch_message(929065214761123840))
+    emotes.append("👍")
+
+    for i in range(len(messages)):
+        await messages[i].add_reaction(emotes[i])
 
 class switch(object):
     value = None
@@ -370,17 +433,6 @@ async def validate_user(discord_id, account):
 #        table.insert({'discord': ctx.author.id, 'src': account})
 #    else:
 #        table.update({'src': account}, Query().discord == ctx.author.id)
-
-async def test_modify_role(message_id, emoji_id, guild, user, remove):
-    target_message_id = 1071148440895115314
-    target_emoji_id = 822869417930653709
-
-    if message_id == target_message_id and emoji_id == target_emoji_id and user != bot.user:
-        role = discord.utils.get(guild.roles, name="Test")
-        if remove:
-            await user.remove_roles(role)
-        else:
-            await user.add_roles(role)
 
 # TODO Ideas
 #

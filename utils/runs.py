@@ -1,0 +1,66 @@
+import requests
+import discord
+import datetime
+
+from datetime import datetime as dt
+
+base_url = "https://www.speedrun.com/api/v1/"
+
+async def post_run(bot, channel_id, run, title):
+    game = requests.get(f"{base_url}games/{run['game']}").json()["data"]
+    # TODO Add IL/Category check
+    category = requests.get(f"{base_url}categories/{run['category']}").json()["data"]
+
+    var_names=[]
+    url_variables = ""
+    for var in run["values"]:
+        # Preparing the variable for visualization
+        variables = requests.get(f"{base_url}variables/{var}").json()["data"]
+        name = variables["name"]
+        name += ": " + variables["values"]["values"][run["values"][var]]["label"]
+        var_names.append(name)
+
+        # Building the url for the leaderboard filtering to improve performance
+        url_variables += f"&var-{variables['id']}={run['values'][var]}"
+
+    leaderboard = requests.get(f"{base_url}leaderboards/{game['id']}/category/{category['id']}?max=100{url_variables}").json()
+    place = "Not found"
+    if len(leaderboard) == 1:
+        dleaderboard = leaderboard["data"]
+        for lrun in dleaderboard["runs"]:
+            if lrun["run"]["id"] == run["id"]:
+                place = lrun["place"]
+                break
+
+    embed = discord.Embed(title=title, color=discord.Color.random())
+    embed.add_field(name='Game', value=game['names']['international'], inline=True)
+    embed.add_field(name='Position', value=place, inline=True)
+    embed.add_field(name='Category', value=category['name'], inline=False)
+    # Check for variables
+    if len(var_names) > 0:
+        embed.add_field(name='Variable/s', value=", ".join(var_names), inline=False)
+
+    players = []
+    for player in run['players']:
+        if player['rel'] == 'guest':
+            players.append(player['name'])
+        else:
+            players.append(requests.get(f"{base_url}users/{player['id']}").json()['data']['names']['international'])
+    embed.add_field(name='Runner/s', value=", ".join(players), inline=False)
+
+    primary = run['times']['primary_t']
+    realtime = run['times']['realtime_t']
+    primary_time = str(datetime.timedelta(seconds=primary))
+
+    if primary_time[-4:] == "0000":
+        embed.add_field(name='Time', value=primary_time[:-4], inline=True)
+    else:
+        embed.add_field(name='Time', value=primary_time, inline=True)
+
+    if realtime != run['times']['primary_t']:
+        embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
+
+    embed.add_field(name="Link", value=run['weblink'], inline=False)
+
+    channel = bot.get_channel(channel_id)
+    await channel.send(embed=embed)

@@ -7,6 +7,7 @@
                "id": "rklxqxwk",
                "variables": [
                   {
+                     "name": "Game Version",
                      "var_id": "yn25reen",
                      "values": {
                         "60hz": "5lerr0mq",
@@ -20,6 +21,7 @@
                "id": "ndx53ook",
                "variables": [
                   {
+                     "name": "Game Version",
                      "var_id": "jlzwvzql",
                      "values": {
                         "60hz": "jq600wvq",
@@ -53,6 +55,7 @@
                "id": "zjdznvdv",
                "variables": [
                   {
+                     "name": "Version",
                      "var_id": "p85r513n",
                      "values": {
                         "ps3": "5le9xopq",
@@ -60,6 +63,7 @@
                      }
                   },
                   {
+                     "name": "Difficulty",
                      "var_id": "onvjw4mn",
                      "values": {
                         "normal": "0137xjdl",
@@ -72,6 +76,7 @@
                "id": "r02qrpky",
                "variables": [
                   {
+                     "name": "Version",
                      "var_id": "p85r513n",
                      "values": {
                         "ps3": "5le9xopq",
@@ -79,6 +84,7 @@
                      }
                   },
                   {
+                     "name": "Diffuculty",
                      "var_id": "ylpe2qd8",
                      "values": {
                         "nta": "0q5z4mmq",
@@ -91,6 +97,7 @@
                "id": "xd1eg0z2",
                "variables": [
                   {
+                     "name": "Version",
                      "var_id": "p85r513n",
                      "values": {
                         "ps3": "5le9xopq",
@@ -120,6 +127,7 @@
                "id": "5dw5v55d",
                "variables": [
                   {
+                     "name": "Difficulty",
                      "var_id": "wl36j6yl",
                      "values": {
                         "easy": "xqkr6341",
@@ -128,6 +136,7 @@
                      }
                   },
                   {
+                     "name": "SSD",
                      "var_id": "68km1mkl",
                      "values": {
                         "yes": "gq7nzod1",
@@ -140,6 +149,7 @@
                "id": "5dw5v75d",
                "variables": [
                   {
+                     "name": "Difficulty/Mode",
                      "var_id": "wle6g628",
                      "values": {
                         "nta": "jqz6ywk1",
@@ -147,6 +157,7 @@
                      }
                   },
                   {
+                     "name": "SSD",
                      "var_id": "68km1mkl",
                      "values": {
                         "yes": "gq7nzod1",
@@ -159,6 +170,7 @@
                "id": "7dg9oqpk",
                "variables": [
                   {
+                     "name": "SSD",
                      "var_id": "68km1mkl",
                      "values": {
                         "yes": "gq7nzod1",
@@ -166,6 +178,7 @@
                      }
                   },
                   {
+                     "name": "Sub-category",
                      "var_id": "kn0jqd3l",
                      "values": {
                         "any%": "rqvoknyl",
@@ -173,6 +186,7 @@
                      }
                   },
                   {
+                     "name": "Item Menu Glitch",
                      "var_id": "6nj4g9pn",
                      "values": {
                         "no_img": "0137oyyl",
@@ -185,6 +199,7 @@
                "id": "zd374nr2",
                "variables": [
                   {
+                     "name": "SSD",
                      "var_id": "68km1mkl",
                      "values": {
                         "yes": "gq7nzod1",
@@ -197,6 +212,7 @@
                "id": "jdz94eg2",
                "variables": [
                   {
+                     "name": "SSD",
                      "var_id": "68km1mkl",
                      "values": {
                         "yes": "gq7nzod1",

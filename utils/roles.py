@@ -1,7 +1,9 @@
 import sys
 import os
+import discord
 
-DEV_MODE = os.getenv('DEV_MODE') == 'True'
+from dotenv import load_dotenv
+
 sys.path.append("../TICO-DISCORD-BOT")
 
 async def handle_reaction(payload, bot, remove):
@@ -13,7 +15,7 @@ async def handle_reaction(payload, bot, remove):
 
     custom_payload = [message_id, emoji_id, emoji, user, guild, remove]
 
-    if DEV_MODE:
+    if os.getenv('DEV_MODE') == 'True':
         # Standard !
         await modify_role(custom_payload, bot, 1071148440895115314, "❗", "Standard Test")
         # Custom OK
@@ -29,7 +31,6 @@ async def handle_reaction(payload, bot, remove):
 # custom_payload = [message_id, emoji_id, emoji, user, guild, remove, user]
 async def modify_role(payload, bot, target_message_id, target_emoji, role_name):
     if payload[0] == target_message_id and (payload[1] == target_emoji or payload[2] == target_emoji) and payload[3] != bot.user:
-        print("hello")
         await exe_modify_role(payload[3], payload[4], payload[5], role_name)
 
 async def pronouns_modify_role(payload, bot):
@@ -55,7 +56,7 @@ async def base_reactions(bot):
     messages = []
     emotes = []
 
-    if DEV_MODE:
+    if os.getenv('DEV_MODE') == 'True':
         test_channel = bot.get_channel(1068245117544169545)
         for i in range(2):
             messages.append(await test_channel.fetch_message(1071148440895115314))

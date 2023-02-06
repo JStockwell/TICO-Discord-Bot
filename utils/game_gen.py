@@ -69,6 +69,7 @@ def create_db(game):
         vars = []
         for variable in variables:
             var = {
+                "name": variable["name"],
                 "var_id": variable["id"]
             }
 

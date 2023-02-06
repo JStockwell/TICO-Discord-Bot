@@ -47,6 +47,10 @@ import json
 import datetime
 import Paginator
 
+import utils.help as Help
+import utils.roles as Roles
+from utils.game_gen import gen_db
+
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from datetime import datetime as dt
@@ -55,6 +59,7 @@ from tinydb import TinyDB, Query
 ### --- REST api Initialization --- ###
 
 base_url = "https://www.speedrun.com/api/v1/"
+games_path = "json/games.json"
 
 ### --- Bot Initialization --- ###
 
@@ -63,12 +68,14 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
-DEV_MODE = True
+DEV_MODE = os.getenv('DEV_MODE') == 'True'
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
 # TODO Automate game_db creation
-game_db = json.load(open('json/games.json', 'r'))
+
+gen_db(games_path)
+game_db = json.load(open(games_path, 'r'))
 db = TinyDB(TINYDB_PATH)
 
 ### --- Functions --- ###
@@ -77,7 +84,7 @@ db = TinyDB(TINYDB_PATH)
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     post_verification.start()
-    await base_reactions()
+    await Roles.base_reactions(bot)
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -101,11 +108,11 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_raw_reaction_add(payload):
-    await handle_reaction(payload, False)
+    await Roles.handle_reaction(payload, bot, False)
 
 @bot.event
 async def on_raw_reaction_remove(payload):
-    await handle_reaction(payload, True)
+    await Roles.handle_reaction(payload, bot, True)
 
 async def handle_reaction(payload, remove):
     message_id = payload.message_id
@@ -184,15 +191,6 @@ async def base_reactions():
     for i in range(len(messages)):
         await messages[i].add_reaction(emotes[i])
 
-class switch(object):
-    value = None
-    def __new__(class_, value):
-        class_.value = value
-        return True
-
-def case(*args):
-    return any((arg == switch.value for arg in args))
-
 ### --- Commands --- ###
 
 @bot.command(name="hello", help="How are you?")
@@ -232,68 +230,7 @@ async def help(ctx, *args):
         if bot_command is None:
             await ctx.send("Command not found")
         else:
-            await help_command(ctx, bot_command)
-
-async def help_command(ctx, command):
-    while switch(command.name):
-        if case("wr"):
-            await help_wr(ctx, command.help)
-            break
-        if case("hello"):
-            await generic_help(ctx, command, "Hello", ["Why do you need help with a simple hello? :("])
-            break
-        if case("beginnerhelp"):
-            await generic_help(ctx, command, "Beginnerhelp", ["I am in your walls."])
-            break
-        if case("socials"):
-            await generic_help(ctx, command, "Socials", ["Don't forget to follow!"])
-            break
-        if case("src"):
-            await generic_help(ctx, command, "SRC", ["Links your Discord to your SRC account (WIP!)", "Format: !src <SRC Account Name>"])
-            break
-        await ctx.send("Command not found")
-
-async def generic_help(ctx, command, title, description):
-    embed = discord.Embed(title=f"{title}: {command.help}", color=0x00ff00)
-    for field in description:
-        embed.add_field(name="", value=field, inline=False)
-    await ctx.send(embed=embed)
-
-### --- Help --- ###
-async def help_wr(ctx, help):
-    embed1 = help_wr_embed(help)
-
-    ico = "```• Any%\n  • Version:\n    • 60hz\n    • 50hz\n    • ntsc-u\n"
-    ico += "• Co-Op\n  • Version:\n    • 60hz\n    • 50hz\n"
-    ico += "• Enlightenment```"
-    embed1.add_field(name="Ico", value=ico, inline=False)
-
-    sotc = "```• Any%\n  • Version:\n   • PS2\n    • PS3\n  • Difficulty:\n    • Normal\n    • Hard\n"
-    sotc += "• Boss_Rush\n  • Version:\n    • PS2\n    • PS3\n  • Difficulty:\n    • NTA\n    • HTA\n"
-    sotc += "• Queens_Sword```"
-    embed1.add_field(name="Shadow of the Colossus", value=sotc, inline=False)
-
-    embed2 = help_wr_embed(help)
-    sotc2018 = "```• Any%\n  • Difficulty:\n    • Easy\n    • Normal\n    • Hard\n"
-    sotc2018 += "• Boss_Rush\n  • Difficulty:\n    • NTA\n    • HTA\n"
-    sotc2018 += "• NG+\n  • Sub-Category:\n    • Any%\n    • All_Glints\n  • Item Menu Glitch\n    • No_IMG\n    • IMG\n"
-    sotc2018 += "• Platinum\n• 100%```"
-    embed2.add_field(name="Shadow of the Colossus (2018)", value=sotc2018, inline=False)
-
-    tlg = "```• Any%\n• All_Barrels\n• Platinum```"
-    embed2.add_field(name="The Last Guardian", value=tlg, inline=False)
-
-    await Paginator.Simple().start(ctx, pages=[embed1, embed2])
-
-def help_wr_embed(help):
-    embed = discord.Embed(title=f"WR: {help}", color=0x00ff00)
-    embed.add_field(name="Format", value="`!wr <game> <category> <var_1> <var_2>...`", inline=False)
-    embed.add_field(name="Example", value="`!wr ico co-op 60hz`", inline=False)
-
-    embed.add_field(name="Games", value="`ico, sotc, sotc(2018), tlg, ce`", inline=False)
-    embed.add_field(name="__Categories For Each Game__", value="", inline=False)
-
-    return embed
+            await Help.help_command(ctx, bot_command)
 
 # Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz
@@ -313,12 +250,12 @@ async def get_wr(ctx, *args):
             var.append(args[i].lower())
         i += 1
 
-    game = game_db["data"][game_name]
+    game = game_db[game_name]
 
-    url = f"{base_url}leaderboards/{game['id']}/category/{game['fg'][category]['id']}?top=1&embed=players"
+    url = f"{base_url}leaderboards/{game['id']}/category/{game['categories']['fg'][category]['id']}?top=1&embed=players"
     i = 0
     for v in var:
-        url += f"&var-{game['fg'][category]['variables'][i]['var_id']}={game['fg'][category]['variables'][i]['values'][v]}"
+        url += f"&var-{game['categories']['fg'][category]['variables'][i]['var_id']}={game['categories']['fg'][category]['variables'][i]['values'][v]}"
         i += 1
     wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
 
@@ -390,7 +327,7 @@ async def post_run(channel_id, run, title):
 
 @tasks.loop(seconds = 300) # repeat after every five minutes
 async def post_verification():
-    channel_lookup = json.load(open('json/channels.json', 'r'))
+    channel_lookup = json.load(open('utils/json/channels.json', 'r'))
     notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
     for notification in notifications:
         notif_time = dt.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
@@ -443,8 +380,6 @@ async def validate_user(discord_id, account):
 # to opt in to this feature, so I dont have to be checking everyone in the world
 #
 # Command that gives all the positions people have in all 3 games and CE
-#
-# Notification every time a run gets validated
 
 if DEV_MODE:
     bot.run(TEST_TOKEN)

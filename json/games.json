@@ -1,6 +1,7 @@
 {
    "ico": {
       "id": "o1yrkr6q",
+      "name": "ICO",
       "categories": {
          "fg": {
             "any%": {
@@ -49,6 +50,7 @@
    },
    "sotc": {
       "id": "9j1l8v6g",
+      "name": "Shadow of the Colossus",
       "categories": {
          "fg": {
             "any%": {
@@ -121,6 +123,7 @@
    },
    "sotc(2018)": {
       "id": "y6545p8d",
+      "name": "Shadow of the Colossus (2018)",
       "categories": {
          "fg": {
             "any%": {
@@ -236,6 +239,7 @@
    },
    "tlg": {
       "id": "j1nvyx6p",
+      "name": "The Last Guardian",
       "categories": {
          "fg": {
             "any%": {
@@ -260,6 +264,7 @@
       }
    },
    "ce": {
-      "id": "y6547l0d"
+      "id": "y6547l0d",
+      "name": "Category Extensions"
    }
 }

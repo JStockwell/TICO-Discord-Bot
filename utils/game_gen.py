@@ -5,19 +5,24 @@ base_url = "https://www.speedrun.com/api/v1/"
 
 db = {
     "ico": {
-        "id": "o1yrkr6q"
+        "id": "o1yrkr6q",
+        "name": "ICO"
     },
     "sotc": {
-        "id": "9j1l8v6g"
+        "id": "9j1l8v6g",
+        "name": "Shadow of the Colossus"
     },
     "sotc(2018)": {
-        "id": "y6545p8d"
+        "id": "y6545p8d",
+        "name": "Shadow of the Colossus (2018)"
     },
     "tlg": {
-        "id": "j1nvyx6p"
+        "id": "j1nvyx6p",
+        "name": "The Last Guardian"
     },
     "ce": {
-        "id": "y6547l0d"
+        "id": "y6547l0d",
+        "name": "Category Extensions"
     }
 }
 
@@ -41,6 +46,8 @@ def gen_db(path):
 
     with open(path, "w") as outfile:
         outfile.write(json_object)
+
+    gen_help()
 
 def create_db(game):
     categories = requests.get(f"{base_url}games/{game['id']}/categories").json()["data"]
@@ -90,3 +97,26 @@ def create_db(game):
 
 
     return result
+
+def gen_help():
+    result = {}
+
+    for game in db:
+        text = "```"
+        print(db[game])
+        for category in db[game]["categories"]["fg"]:
+            cat_text = f"• {category}\n"
+            for variable in db[game]["categories"]["fg"][category]["variables"]:
+                var_text = f"   • {variable['name']}\n"
+                for value in variable["values"]:
+                    var_text += f"    • {value}\n"
+                cat_text += var_text
+            text += cat_text
+
+        text += "```"
+        result[game] = text
+
+    json_object = json.dumps(result, indent=3)
+
+    with open("../json/help.json", "w") as outfile:
+        outfile.write(json_object)

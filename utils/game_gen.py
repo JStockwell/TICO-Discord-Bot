@@ -35,12 +35,14 @@ exceptions = {
     "any%_queen's_sword": "queens_sword",
     "ps3_remaster": "ps3",
     "ps2_original": "ps2",
+    # CE
+    
+    
 }
 
 def gen_db(path):
     for game in db:
-        if game != "ce":
-            db[game]["categories"] = create_db(db[game])
+        db[game]["categories"] = create_db(db[game])
 
     json_object = json.dumps(db, indent=3)
 
@@ -73,7 +75,7 @@ def create_db(game):
         else:
             result["il"][name] = cat
 
-        vars = []
+        vars_list = []
         for variable in variables:
             var = {
                 "name": variable["name"],
@@ -91,9 +93,9 @@ def create_db(game):
 
             var["values"] = values
 
-            vars.append(var)
+            vars_list.append(var)
 
-        cat["variables"] = vars
+        cat["variables"] = vars_list
 
 
     return result
@@ -118,5 +120,5 @@ def gen_help():
 
     json_object = json.dumps(result, indent=3)
 
-    with open("../json/help.json", "w") as outfile:
+    with open("json/help.json", "w") as outfile:
         outfile.write(json_object)

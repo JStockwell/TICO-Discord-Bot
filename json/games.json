@@ -1,0 +1,453 @@
+{
+   "ico": {
+      "id": "o1yrkr6q",
+      "name": "ICO",
+      "categories": {
+         "fg": {
+            "any%": {
+               "id": "rklxqxwk",
+               "variables": [
+                  {
+                     "name": "Game Version",
+                     "var_id": "yn25reen",
+                     "values": {
+                        "60hz": "5lerr0mq",
+                        "50hz": "0q5nnm7q",
+                        "ntsc-u": "4lxppk3q"
+                     }
+                  }
+               ]
+            },
+            "co-op": {
+               "id": "ndx53ook",
+               "variables": [
+                  {
+                     "name": "Game Version",
+                     "var_id": "jlzwvzql",
+                     "values": {
+                        "60hz": "jq600wvq",
+                        "50hz": "5lmkke8q"
+                     }
+                  }
+               ]
+            },
+            "enlightenment": {
+               "id": "vdox81vd",
+               "variables": []
+            }
+         },
+         "il": {
+            "60hz": {
+               "id": "9kv89jod",
+               "variables": []
+            },
+            "50hz": {
+               "id": "w20q318d",
+               "variables": []
+            }
+         }
+      }
+   },
+   "sotc": {
+      "id": "9j1l8v6g",
+      "name": "Shadow of the Colossus",
+      "categories": {
+         "fg": {
+            "any%": {
+               "id": "zjdznvdv",
+               "variables": [
+                  {
+                     "name": "Version",
+                     "var_id": "p85r513n",
+                     "values": {
+                        "ps3": "5le9xopq",
+                        "ps2": "rqvgy75q"
+                     }
+                  },
+                  {
+                     "name": "Difficulty",
+                     "var_id": "onvjw4mn",
+                     "values": {
+                        "normal": "0137xjdl",
+                        "hard": "rqvox07l"
+                     }
+                  }
+               ]
+            },
+            "boss_rush": {
+               "id": "r02qrpky",
+               "variables": [
+                  {
+                     "name": "Version",
+                     "var_id": "p85r513n",
+                     "values": {
+                        "ps3": "5le9xopq",
+                        "ps2": "rqvgy75q"
+                     }
+                  },
+                  {
+                     "name": "Diffuculty",
+                     "var_id": "ylpe2qd8",
+                     "values": {
+                        "nta": "0q5z4mmq",
+                        "hta": "4lxogk2l"
+                     }
+                  }
+               ]
+            },
+            "queens_sword": {
+               "id": "xd1eg0z2",
+               "variables": [
+                  {
+                     "name": "Version",
+                     "var_id": "p85r513n",
+                     "values": {
+                        "ps3": "5le9xopq",
+                        "ps2": "rqvgy75q"
+                     }
+                  }
+               ]
+            }
+         },
+         "il": {
+            "nta": {
+               "id": "jzd3qvkn",
+               "variables": []
+            },
+            "hta": {
+               "id": "l9kvn8dg",
+               "variables": []
+            }
+         }
+      }
+   },
+   "sotc(2018)": {
+      "id": "y6545p8d",
+      "name": "Shadow of the Colossus (2018)",
+      "categories": {
+         "fg": {
+            "any%": {
+               "id": "5dw5v55d",
+               "variables": [
+                  {
+                     "name": "Difficulty",
+                     "var_id": "wl36j6yl",
+                     "values": {
+                        "easy": "xqkr6341",
+                        "normal": "gq7nzor1",
+                        "hard": "21gjo6o1"
+                     }
+                  }
+               ]
+            },
+            "boss_rush": {
+               "id": "5dw5v75d",
+               "variables": [
+                  {
+                     "name": "Difficulty/Mode",
+                     "var_id": "wle6g628",
+                     "values": {
+                        "nta": "jqz6ywk1",
+                        "hta": "klrz6dw1"
+                     }
+                  }
+               ]
+            },
+            "ng+": {
+               "id": "7dg9oqpk",
+               "variables": [
+                  {
+                     "name": "Sub-category",
+                     "var_id": "kn0jqd3l",
+                     "values": {
+                        "any%": "rqvoknyl",
+                        "all_glints": "5lez6x6l"
+                     }
+                  },
+                  {
+                     "name": "Item Menu Glitch",
+                     "var_id": "6nj4g9pn",
+                     "values": {
+                        "no_img": "0137oyyl",
+                        "img": "zqoo874q"
+                     }
+                  }
+               ]
+            },
+            "platinum": {
+               "id": "zd374nr2",
+               "variables": []
+            },
+            "100%": {
+               "id": "jdz94eg2",
+               "variables": []
+            }
+         },
+         "il": {
+            "nta": {
+               "id": "7kjp4p3k",
+               "variables": []
+            },
+            "hta": {
+               "id": "xk9g1gvd",
+               "variables": []
+            }
+         }
+      }
+   },
+   "tlg": {
+      "id": "j1nvyx6p",
+      "name": "The Last Guardian",
+      "categories": {
+         "fg": {
+            "any%": {
+               "id": "vdoqqy9k",
+               "variables": []
+            },
+            "all_barrels": {
+               "id": "7dgnvv72",
+               "variables": []
+            },
+            "platinum%": {
+               "id": "7kj86xgd",
+               "variables": []
+            }
+         },
+         "il": {
+            "individual_levels": {
+               "id": "rkl5qpr2",
+               "variables": []
+            }
+         }
+      }
+   },
+   "ce": {
+      "id": "y6547l0d",
+      "name": "Category Extensions",
+      "categories": {
+         "ce": {
+            "fg": {
+               "tricofecta": {
+                  "id": "w20xv8o2",
+                  "variables": []
+               },
+               "relay": {
+                  "id": "7dg04xlk",
+                  "variables": []
+               }
+            },
+            "il": {}
+         },
+         "ce ico": {
+            "fg": {
+               "any%": {
+                  "id": "rkl5z3r2",
+                  "variables": [
+                     {
+                        "name": "ICO Version",
+                        "var_id": "2lg5o1q8",
+                        "values": {
+                           "60hz": "9qjorkgl",
+                           "50hz": "810y8k5l",
+                           "ntsc-u": "jq6wm67l"
+                        }
+                     },
+                     {
+                        "name": "Variation",
+                        "var_id": "yn2wgmjn",
+                        "values": {
+                           "stick%": "klrdmdoq",
+                           "all_puzzles": "21dnwnpl"
+                        }
+                     }
+                  ]
+               },
+               "cooties%": {
+                  "id": "n2y97v1d",
+                  "variables": []
+               },
+               "solo_co-op": {
+                  "id": "wdmvlmed",
+                  "variables": []
+               }
+            },
+            "il": {}
+         },
+         "ce sotc": {
+            "fg": {
+               "all_platforms": {
+                  "id": "jdz694r2",
+                  "variables": []
+               },
+               "all_difficulties": {
+                  "id": "zd3vjw82",
+                  "variables": []
+               },
+               "any%": {
+                  "id": "7kj81gzd",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "ylpe45r8",
+                        "values": {
+                           "normal": "klrpy5wq",
+                           "hard": "21dz32gl"
+                        }
+                     },
+                     {
+                        "name": "Variation",
+                        "var_id": "38dz4kzn",
+                        "values": {
+                           "intended": "xqkjrkdl",
+                           "death%": "5q8608y1"
+                        }
+                     }
+                  ]
+               },
+               "boss_rush": {
+                  "id": "w20xvej2",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "78969e98",
+                        "values": {
+                           "nta": "zqopyd51",
+                           "hta": "0138v3rq"
+                        }
+                     },
+                     {
+                        "name": "Variation",
+                        "var_id": "p854zrxl",
+                        "values": {
+                           "even": "814yk601",
+                           "odd": "z19m5v0l",
+                           "reverse": "xqkj93nl",
+                           "random": "814yx3e1",
+                           "slash%": "z19m47yl",
+                           "death%": "21dzygpl"
+                        }
+                     }
+                  ]
+               },
+               "mirror": {
+                  "id": "wk6evwp2",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "j84gok48",
+                        "values": {
+                           "ng+": "jqzo4g21",
+                           "normal": "gq7yg2pq",
+                           "hard": "21gkg96l"
+                        }
+                     }
+                  ]
+               },
+               "blindfolded": {
+                  "id": "rkl3vz6k",
+                  "variables": [
+                     {
+                        "name": "Colossus Name",
+                        "var_id": "p854zdxl",
+                        "values": {
+                           "valus": "0q5nxdrq"
+                        }
+                     }
+                  ]
+               },
+               "pmg": {
+                  "id": "zd3vx8v2",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "onv7yw7n",
+                        "values": {
+                           "normal": "p12n4kk1",
+                           "hard": "81pj6zk1"
+                        }
+                     },
+                     {
+                        "name": "Colossus Name",
+                        "var_id": "ql619278",
+                        "values": {
+                           "valus": "z193dvk1"
+                        }
+                     }
+                  ]
+               },
+               "iron_wander": {
+                  "id": "xd11vl4d",
+                  "variables": []
+               },
+               "animals_of_the_land": {
+                  "id": "9d8opr62",
+                  "variables": [
+                     {
+                        "name": "Variation",
+                        "var_id": "onv7w7mn",
+                        "values": {
+                           "save": "jq6m6ro1",
+                           "kill": "5lmy060l"
+                        }
+                     }
+                  ]
+               },
+               "spoils_of_the_land": {
+                  "id": "vdozpw6k",
+                  "variables": [
+                     {
+                        "name": "Chonk Type",
+                        "var_id": "9l7x2x4n",
+                        "values": {
+                           "fruits": "z193oyj1",
+                           "lizards": "p12nymv1"
+                        }
+                     },
+                     {
+                        "name": "Chonk Number",
+                        "var_id": "yn2j2jd8",
+                        "values": {
+                           "1": "81pjmoe1",
+                           "10": "xqkdy09l",
+                           "50": "8108kjpq",
+                           "all": "gq7wmdn1"
+                        }
+                     }
+                  ]
+               }
+            },
+            "il": {
+               "sotc_:_il_death%_(normal)": {
+                  "id": "mkelln9d",
+                  "variables": []
+               },
+               "sotc_:_il_death%_(hard)": {
+                  "id": "jdroo9xd",
+                  "variables": []
+               }
+            }
+         },
+         "ce tlg": {
+            "fg": {
+               "true_ending": {
+                  "id": "xd14ly8d",
+                  "variables": []
+               },
+               "poop": {
+                  "id": "9d8ezq3d",
+                  "variables": []
+               },
+               "windmill": {
+                  "id": "wk6e98o2",
+                  "variables": []
+               },
+               "bad_ending": {
+                  "id": "7dgmrl7d",
+                  "variables": []
+               }
+            },
+            "il": {}
+         }
+      }
+   }
+}

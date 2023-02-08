@@ -89,4 +89,32 @@ async def get_wr_standard(bot, ctx, game, args):
     else:
         await ctx.send("No world record found")
 
+game_list = ["ico", "sotc", "tlg"]
 async def get_wr_ce(bot, ctx, game, args):
+    game_name = args[0]
+
+    if args[1].lower() in game_list:
+        game_name += f" {args[1].lower()}"
+        args = args[1:]
+
+    game = game["categories"][game_name]
+
+    var = []
+    category = args[1].lower()
+
+    for arg in args[2:]:
+        var.append(arg.lower())
+
+    url = f"{base_url}leaderboards/y6547l0d/category/{game['fg'][category]['id']}?top=1&embed=players"
+    i = 0
+    for v in var:
+        url += f"&var-{game['fg'][category]['variables'][i]['var_id']}={game['fg'][category]['variables'][i]['values'][v]}"
+        i += 1
+    wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
+
+    if len(wr['runs']) > 0:
+        run = requests.get(f"{base_url}runs/{wr['runs'][0]['run']['id']}").json()["data"]
+        await post_run(bot, ctx.message.channel.id, run, "World Record")
+
+    else:
+        await ctx.send("No world record found")

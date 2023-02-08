@@ -247,8 +247,8 @@
                         "name": "ICO Version",
                         "var_id": "2lg5o1q8",
                         "values": {
-                           "60_hz": "9qjorkgl",
-                           "50_hz": "810y8k5l",
+                           "60hz": "9qjorkgl",
+                           "50hz": "810y8k5l",
                            "ntsc-u": "jq6wm67l"
                         }
                      },

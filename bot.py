@@ -8,7 +8,7 @@ import Paginator
 
 import utils.help as Help
 import utils.roles as Roles
-import utils.runs as Runs
+from utils.runs import get_wr_ce, get_wr_standard
 from utils.game_gen import gen_db
 
 from dotenv import load_dotenv
@@ -29,11 +29,12 @@ TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
 DEV_MODE = os.getenv('DEV_MODE') == 'True'
+GEN_DB_FLAG = True
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
 
-if not DEV_MODE:
+if not DEV_MODE or (DEV_MODE and GEN_DB_FLAG):
     gen_db(games_path)
 game_db = json.load(open(games_path, 'r'))
 db = TinyDB(TINYDB_PATH)
@@ -128,7 +129,7 @@ async def get_wr(ctx, *args):
         await get_wr_ce(bot, ctx, game, args)
 
     else:
-        await Runs.get_wr_standard(bot, ctx, game, args)
+        await get_wr_standard(bot, ctx, game, args)
 
 @tasks.loop(seconds = 300) # repeat after every five minutes
 async def post_verification():

@@ -68,6 +68,7 @@ async def post_run(bot, channel_id, run, title):
     channel = bot.get_channel(channel_id)
     await channel.send(embed=embed)
 
+# TODO Abstract with a number of players in ?top=X
 async def get_wr_standard(bot, ctx, game, args):
     var = []
     category = args[1].lower()
@@ -89,6 +90,7 @@ async def get_wr_standard(bot, ctx, game, args):
     else:
         await ctx.send("No world record found")
 
+# TODO Abstract with a number of players in ?top=X
 game_list = ["ico", "sotc", "tlg"]
 async def get_wr_ce(bot, ctx, game, args):
     game_name = args[0]

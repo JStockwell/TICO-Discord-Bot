@@ -1,3 +1,4 @@
+# Created by JStockwell on GitHub
 import sys
 import os
 import discord

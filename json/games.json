@@ -137,14 +137,6 @@
                         "normal": "gq7nzor1",
                         "hard": "21gjo6o1"
                      }
-                  },
-                  {
-                     "name": "SSD",
-                     "var_id": "68km1mkl",
-                     "values": {
-                        "yes": "gq7nzod1",
-                        "no": "21gjo681"
-                     }
                   }
                ]
             },
@@ -158,28 +150,12 @@
                         "nta": "jqz6ywk1",
                         "hta": "klrz6dw1"
                      }
-                  },
-                  {
-                     "name": "SSD",
-                     "var_id": "68km1mkl",
-                     "values": {
-                        "yes": "gq7nzod1",
-                        "no": "21gjo681"
-                     }
                   }
                ]
             },
             "ng+": {
                "id": "7dg9oqpk",
                "variables": [
-                  {
-                     "name": "SSD",
-                     "var_id": "68km1mkl",
-                     "values": {
-                        "yes": "gq7nzod1",
-                        "no": "21gjo681"
-                     }
-                  },
                   {
                      "name": "Sub-category",
                      "var_id": "kn0jqd3l",
@@ -200,29 +176,11 @@
             },
             "platinum": {
                "id": "zd374nr2",
-               "variables": [
-                  {
-                     "name": "SSD",
-                     "var_id": "68km1mkl",
-                     "values": {
-                        "yes": "gq7nzod1",
-                        "no": "21gjo681"
-                     }
-                  }
-               ]
+               "variables": []
             },
             "100%": {
                "id": "jdz94eg2",
-               "variables": [
-                  {
-                     "name": "SSD",
-                     "var_id": "68km1mkl",
-                     "values": {
-                        "yes": "gq7nzod1",
-                        "no": "21gjo681"
-                     }
-                  }
-               ]
+               "variables": []
             }
          },
          "il": {
@@ -267,317 +225,228 @@
       "id": "y6547l0d",
       "name": "Category Extensions",
       "categories": {
-         "fg": {
-            "tricofecta": {
-               "id": "w20xv8o2",
-               "variables": [
-                  {
-                     "name": "ICO Version",
-                     "var_id": "38dz4wxn",
-                     "values": {
-                        "60_hz": "814ykrw1",
-                        "50_hz": "4lxp0mjq",
-                        "ntsc-u": "jqzpvj4l"
-                     }
-                  },
-                  {
-                     "name": "SotC Version",
-                     "var_id": "ylqmwomn",
-                     "values": {
-                        "ps2": "klrpjg0q",
-                        "ps3_remastered": "21dzv03l",
-                        "ps4_remake": "5q862yr1"
-                     }
-                  },
-                  {
-                     "name": "TLG Version",
-                     "var_id": "gnxv12jl",
-                     "values": {
-                        "ps4": "4qyp503q",
-                        "ps5_(60fps)": "mlnwdx6l"
-                     }
-                  }
-               ]
+         "ce": {
+            "fg": {
+               "tricofecta": {
+                  "id": "w20xv8o2",
+                  "variables": []
+               },
+               "relay": {
+                  "id": "7dg04xlk",
+                  "variables": []
+               }
             },
-            "relay_runs": {
-               "id": "7dg04xlk",
-               "variables": [
-                  {
-                     "name": "ICO Version",
-                     "var_id": "ylpep5r8",
-                     "values": {
-                        "60_hz": "rqvp427q",
-                        "50_hz": "5lerky5q",
-                        "ntsc-u": "0q5nowmq"
+            "il": {}
+         },
+         "ce ico": {
+            "fg": {
+               "any%": {
+                  "id": "rkl5z3r2",
+                  "variables": [
+                     {
+                        "name": "ICO Version",
+                        "var_id": "2lg5o1q8",
+                        "values": {
+                           "60_hz": "9qjorkgl",
+                           "50_hz": "810y8k5l",
+                           "ntsc-u": "jq6wm67l"
+                        }
+                     },
+                     {
+                        "name": "Variation",
+                        "var_id": "yn2wgmjn",
+                        "values": {
+                           "stick%": "klrdmdoq",
+                           "all_puzzles": "21dnwnpl"
+                        }
                      }
-                  },
-                  {
-                     "name": "SotC Version",
-                     "var_id": "0nwo6erl",
-                     "values": {
-                        "ps2": "4lxpx22q",
-                        "ps3": "814yxm01",
-                        "ps4_remake": "z19m4e0l"
-                     }
-                  },
-                  {
-                     "name": "TLG Version",
-                     "var_id": "78969q98",
-                     "values": {
-                        "ps4": "p12d5j7q",
-                        "ps5_(60fps)": "81pp7kg1"
-                     }
-                  }
-               ]
+                  ]
+               },
+               "cooties%": {
+                  "id": "n2y97v1d",
+                  "variables": []
+               },
+               "solo_co-op": {
+                  "id": "wdmvlmed",
+                  "variables": []
+               }
             },
-            "ico_:_any%_variations": {
-               "id": "rkl5z3r2",
-               "variables": [
-                  {
-                     "name": "ICO Version",
-                     "var_id": "2lg5o1q8",
-                     "values": {
-                        "60_hz": "9qjorkgl",
-                        "50_hz": "810y8k5l",
-                        "ntsc-u": "jq6wm67l"
+            "il": {}
+         },
+         "ce sotc": {
+            "fg": {
+               "all_platforms": {
+                  "id": "jdz694r2",
+                  "variables": []
+               },
+               "all_difficulties": {
+                  "id": "zd3vjw82",
+                  "variables": []
+               },
+               "any%": {
+                  "id": "7kj81gzd",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "ylpe45r8",
+                        "values": {
+                           "normal": "klrpy5wq",
+                           "hard": "21dz32gl"
+                        }
+                     },
+                     {
+                        "name": "Variation",
+                        "var_id": "38dz4kzn",
+                        "values": {
+                           "intended": "xqkjrkdl",
+                           "death%": "5q8608y1"
+                        }
                      }
-                  },
-                  {
-                     "name": "Variation",
-                     "var_id": "yn2wgmjn",
-                     "values": {
-                        "stick%": "klrdmdoq",
-                        "all_puzzles": "21dnwnpl"
+                  ]
+               },
+               "boss_rush": {
+                  "id": "w20xvej2",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "78969e98",
+                        "values": {
+                           "nta": "zqopyd51",
+                           "hta": "0138v3rq"
+                        }
+                     },
+                     {
+                        "name": "Variation",
+                        "var_id": "p854zrxl",
+                        "values": {
+                           "even": "814yk601",
+                           "odd": "z19m5v0l",
+                           "reverse": "xqkj93nl",
+                           "random": "814yx3e1",
+                           "slash%": "z19m47yl",
+                           "death%": "21dzygpl"
+                        }
                      }
-                  }
-               ]
+                  ]
+               },
+               "mirror": {
+                  "id": "wk6evwp2",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "j84gok48",
+                        "values": {
+                           "ng+": "jqzo4g21",
+                           "normal": "gq7yg2pq",
+                           "hard": "21gkg96l"
+                        }
+                     }
+                  ]
+               },
+               "blindfolded": {
+                  "id": "rkl3vz6k",
+                  "variables": [
+                     {
+                        "name": "Colossus Name",
+                        "var_id": "p854zdxl",
+                        "values": {
+                           "valus": "0q5nxdrq"
+                        }
+                     }
+                  ]
+               },
+               "pmg": {
+                  "id": "zd3vx8v2",
+                  "variables": [
+                     {
+                        "name": "Difficulty",
+                        "var_id": "onv7yw7n",
+                        "values": {
+                           "normal": "p12n4kk1",
+                           "hard": "81pj6zk1"
+                        }
+                     },
+                     {
+                        "name": "Colossus Name",
+                        "var_id": "ql619278",
+                        "values": {
+                           "valus": "z193dvk1"
+                        }
+                     }
+                  ]
+               },
+               "iron_wander": {
+                  "id": "xd11vl4d",
+                  "variables": []
+               },
+               "animals_of_the_land": {
+                  "id": "9d8opr62",
+                  "variables": [
+                     {
+                        "name": "Variation",
+                        "var_id": "onv7w7mn",
+                        "values": {
+                           "save": "jq6m6ro1",
+                           "kill": "5lmy060l"
+                        }
+                     }
+                  ]
+               },
+               "spoils_of_the_land": {
+                  "id": "vdozpw6k",
+                  "variables": [
+                     {
+                        "name": "Chonk Type",
+                        "var_id": "9l7x2x4n",
+                        "values": {
+                           "fruits": "z193oyj1",
+                           "lizards": "p12nymv1"
+                        }
+                     },
+                     {
+                        "name": "Chonk Number",
+                        "var_id": "yn2j2jd8",
+                        "values": {
+                           "1": "81pjmoe1",
+                           "10": "xqkdy09l",
+                           "50": "8108kjpq",
+                           "all": "gq7wmdn1"
+                        }
+                     }
+                  ]
+               }
             },
-            "ico_:_cooties%": {
-               "id": "n2y97v1d",
-               "variables": [
-                  {
-                     "name": "Amount of handholds",
-                     "var_id": "rn10my18",
-                     "values": {
-                        "14": "klrpzxwq",
-                        "11": "21dz245l",
-                        "10": "4lxrojrl"
-                     }
-                  },
-                  {
-                     "name": "ICO Version",
-                     "var_id": "wl39pdol",
-                     "values": {
-                        "60_hz": "81wjgx5q",
-                        "50_hz": "zqog0621",
-                        "ntsc-u": "013j0n3l"
-                     }
-                  }
-               ]
-            },
-            "ico_:_solo_co-op": {
-               "id": "wdmvlmed",
-               "variables": [
-                  {
-                     "name": "ICO Version",
-                     "var_id": "r8r194wn",
-                     "values": {
-                        "60_hz": "z19m5njl",
-                        "50_hz": "p12do7vq"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_all_platforms": {
-               "id": "jdz694r2",
-               "variables": []
-            },
-            "sotc_:_any%_all_difficulties": {
-               "id": "zd3vjw82",
-               "variables": []
-            },
-            "sotc_:_any%_variations": {
-               "id": "7kj81gzd",
-               "variables": [
-                  {
-                     "name": "Difficulty",
-                     "var_id": "ylpe45r8",
-                     "values": {
-                        "normal": "klrpy5wq",
-                        "hard": "21dz32gl"
-                     }
-                  },
-                  {
-                     "name": "Variation",
-                     "var_id": "38dz4kzn",
-                     "values": {
-                        "intended_strats": "xqkjrkdl",
-                        "death%": "5q8608y1"
-                     }
-                  },
-                  {
-                     "name": "SSD",
-                     "var_id": "yn25ez2n",
-                     "values": {
-                        "no": "5lerme6q",
-                        "yes": "0q5ng2vq"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_boss_rush_variations": {
-               "id": "w20xvej2",
-               "variables": [
-                  {
-                     "name": "Difficulty",
-                     "var_id": "78969e98",
-                     "values": {
-                        "nta": "zqopyd51",
-                        "hta": "0138v3rq"
-                     }
-                  },
-                  {
-                     "name": "Variation",
-                     "var_id": "p854zrxl",
-                     "values": {
-                        "even": "814yk601",
-                        "odd": "z19m5v0l",
-                        "reverse": "xqkj93nl",
-                        "random": "814yx3e1",
-                        "slash%": "z19m47yl",
-                        "death%": "21dzygpl"
-                     }
-                  },
-                  {
-                     "name": "SSD",
-                     "var_id": "6nj4wgjn",
-                     "values": {
-                        "no": "814y72k1",
-                        "yes": "z19m8z4l"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_mirror_mode": {
-               "id": "wk6evwp2",
-               "variables": [
-                  {
-                     "name": "SSD",
-                     "var_id": "kn0j6qol",
-                     "values": {
-                        "no": "p12dx22q",
-                        "yes": "81ppdxn1"
-                     }
-                  },
-                  {
-                     "name": "Difficulty",
-                     "var_id": "j84gok48",
-                     "values": {
-                        "ng+": "jqzo4g21",
-                        "any%_normal": "gq7yg2pq",
-                        "any%_hard": "21gkg96l"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_blindfolded": {
-               "id": "rkl3vz6k",
-               "variables": [
-                  {
-                     "name": "Colossus Name",
-                     "var_id": "p854zdxl",
-                     "values": {
-                        "valus": "0q5nxdrq"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_photo-mode_glitch": {
-               "id": "zd3vx8v2",
-               "variables": [
-                  {
-                     "name": "Difficulty",
-                     "var_id": "onv7yw7n",
-                     "values": {
-                        "normal": "p12n4kk1",
-                        "hard": "81pj6zk1"
-                     }
-                  },
-                  {
-                     "name": "Colossus Name",
-                     "var_id": "ql619278",
-                     "values": {
-                        "valus": "z193dvk1"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_iron_wander": {
-               "id": "xd11vl4d",
-               "variables": []
-            },
-            "sotc_:_animals_of_the_land": {
-               "id": "9d8opr62",
-               "variables": [
-                  {
-                     "name": "Variation",
-                     "var_id": "onv7w7mn",
-                     "values": {
-                        "save_the_animals": "jq6m6ro1",
-                        "kill_the_animals": "5lmy060l"
-                     }
-                  }
-               ]
-            },
-            "sotc_:_spoils_of_the_land": {
-               "id": "vdozpw6k",
-               "variables": [
-                  {
-                     "name": "Chonk Type",
-                     "var_id": "9l7x2x4n",
-                     "values": {
-                        "fruits": "z193oyj1",
-                        "lizards": "p12nymv1"
-                     }
-                  },
-                  {
-                     "name": "Chonk Number",
-                     "var_id": "yn2j2jd8",
-                     "values": {
-                        "1": "81pjmoe1",
-                        "10": "xqkdy09l",
-                        "50": "8108kjpq",
-                        "all": "gq7wmdn1"
-                     }
-                  }
-               ]
-            },
-            "tlg_:_true_ending": {
-               "id": "xd14ly8d",
-               "variables": []
-            },
-            "tlg_:_call_of_nature": {
-               "id": "9d8ezq3d",
-               "variables": []
-            },
-            "tlg_:_windmill": {
-               "id": "wk6e98o2",
-               "variables": []
-            },
-            "tlg_:_bad_ending": {
-               "id": "7dgmrl7d",
-               "variables": []
+            "il": {
+               "sotc_:_il_death%_(normal)": {
+                  "id": "mkelln9d",
+                  "variables": []
+               },
+               "sotc_:_il_death%_(hard)": {
+                  "id": "jdroo9xd",
+                  "variables": []
+               }
             }
          },
-         "il": {
-            "sotc_:_il_death%_(normal)": {
-               "id": "mkelln9d",
-               "variables": []
+         "ce tlg": {
+            "fg": {
+               "true_ending": {
+                  "id": "xd14ly8d",
+                  "variables": []
+               },
+               "poop": {
+                  "id": "9d8ezq3d",
+                  "variables": []
+               },
+               "windmill": {
+                  "id": "wk6e98o2",
+                  "variables": []
+               },
+               "bad_ending": {
+                  "id": "7dgmrl7d",
+                  "variables": []
+               }
             },
-            "sotc_:_il_death%_(hard)": {
-               "id": "jdroo9xd",
-               "variables": []
-            }
+            "il": {}
          }
       }
    }

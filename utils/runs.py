@@ -1,10 +1,13 @@
+# Created by JStockwell on GitHub
 import requests
 import discord
 import datetime
+import os
 
 from datetime import datetime as dt
 
 base_url = "https://www.speedrun.com/api/v1/"
+SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 
 async def post_run(bot, channel_id, run, title):
     game = requests.get(f"{base_url}games/{run['game']}").json()["data"]
@@ -64,3 +67,26 @@ async def post_run(bot, channel_id, run, title):
 
     channel = bot.get_channel(channel_id)
     await channel.send(embed=embed)
+
+async def get_wr_standard(bot, ctx, game, args):
+    var = []
+    category = args[1].lower()
+
+    for arg in args[2:]:
+        var.append(arg.lower())
+
+    url = f"{base_url}leaderboards/{game['id']}/category/{game['categories']['fg'][category]['id']}?top=1&embed=players"
+    i = 0
+    for v in var:
+        url += f"&var-{game['categories']['fg'][category]['variables'][i]['var_id']}={game['categories']['fg'][category]['variables'][i]['values'][v]}"
+        i += 1
+    wr = requests.get(url, headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
+
+    if len(wr['runs']) > 0:
+        run = requests.get(f"{base_url}runs/{wr['runs'][0]['run']['id']}").json()["data"]
+        await post_run(bot, ctx.message.channel.id, run, "World Record")
+
+    else:
+        await ctx.send("No world record found")
+
+async def get_wr_ce(bot, ctx, game, args):

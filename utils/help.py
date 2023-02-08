@@ -1,14 +1,9 @@
+# Created by JStockwell on GitHub
 import Paginator
 import discord
+import json
 
-class switch(object):
-    value = None
-    def __new__(class_, value):
-        class_.value = value
-        return True
-
-def case(*args):
-    return any((arg == switch.value for arg in args))
+from utils.switch import switch, case
 
 async def help_command(ctx, command):
     while switch(command.name):
@@ -36,29 +31,16 @@ async def generic_help(ctx, command, title, description):
     await ctx.send(embed=embed)
 
 async def help_wr(ctx, help):
-    embed1 = help_wr_embed(help)
+    help_db = json.load(open("json/help.json", 'r'))
+    embeds = []
 
-    ico = "```• Any%\n  • Version:\n    • 60hz\n    • 50hz\n    • ntsc-u\n"
-    ico += "• Co-Op\n  • Version:\n    • 60hz\n    • 50hz\n"
-    ico += "• Enlightenment```"
-    embed1.add_field(name="Ico", value=ico, inline=False)
+    # TODO Enable CE
+    for game in help_db:
+        embed = help_wr_embed(help)
+        embed.add_field(name=game, value=help_db[game], inline=False)
+        embeds.append(embed)
 
-    sotc = "```• Any%\n  • Version:\n   • PS2\n    • PS3\n  • Difficulty:\n    • Normal\n    • Hard\n"
-    sotc += "• Boss_Rush\n  • Version:\n    • PS2\n    • PS3\n  • Difficulty:\n    • NTA\n    • HTA\n"
-    sotc += "• Queens_Sword```"
-    embed1.add_field(name="Shadow of the Colossus", value=sotc, inline=False)
-
-    embed2 = help_wr_embed(help)
-    sotc2018 = "```• Any%\n  • Difficulty:\n    • Easy\n    • Normal\n    • Hard\n"
-    sotc2018 += "• Boss_Rush\n  • Difficulty:\n    • NTA\n    • HTA\n"
-    sotc2018 += "• NG+\n  • Sub-Category:\n    • Any%\n    • All_Glints\n  • Item Menu Glitch\n    • No_IMG\n    • IMG\n"
-    sotc2018 += "• Platinum\n• 100%```"
-    embed2.add_field(name="Shadow of the Colossus (2018)", value=sotc2018, inline=False)
-
-    tlg = "```• Any%\n• All_Barrels\n• Platinum```"
-    embed2.add_field(name="The Last Guardian", value=tlg, inline=False)
-
-    await Paginator.Simple().start(ctx, pages=[embed1, embed2])
+    await Paginator.Simple().start(ctx, pages=embeds)
 
 def help_wr_embed(help):
     embed = discord.Embed(title=f"WR: {help}", color=0x00ff00)

@@ -6,9 +6,9 @@ import json
 import datetime
 import Paginator
 
-import utils.help as Help
-import utils.roles as Roles
-from utils.runs import get_wr_ce, get_wr_standard
+from utils.help import help_command
+from utils.roles import base_reactions, handle_reaction
+from utils.runs import get_wr_ce, get_wr_standard, post_run
 from utils.game_gen import gen_db
 
 from dotenv import load_dotenv
@@ -29,7 +29,7 @@ TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
 DEV_MODE = os.getenv('DEV_MODE') == 'True'
-GEN_DB_FLAG = True
+GEN_DB_FLAG = False
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
@@ -45,7 +45,7 @@ db = TinyDB(TINYDB_PATH)
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     post_verification.start()
-    await Roles.base_reactions(bot)
+    await base_reactions(bot)
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -69,11 +69,11 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_raw_reaction_add(payload):
-    await Roles.handle_reaction(payload, bot, False)
+    await handle_reaction(payload, bot, False)
 
 @bot.event
 async def on_raw_reaction_remove(payload):
-    await Roles.handle_reaction(payload, bot, True)
+    await handle_reaction(payload, bot, True)
 
 ### --- Commands --- ###
 
@@ -114,7 +114,7 @@ async def help(ctx, *args):
         if bot_command is None:
             await ctx.send("Command not found")
         else:
-            await Help.help_command(ctx, bot_command)
+            await help_command(ctx, bot_command)
 
 # Format: !wr <game> <category> <var_1> <var_2>...
 # Example: !wr ico co-op 60hz
@@ -144,9 +144,9 @@ async def post_verification():
                 channel_id = channel_lookup[run['data']['game']]
                 print(f"New run validated for {run['data']['game']}")
                 if DEV_MODE:
-                    await post_run(1068245117544169545, run['data'], "Run Verified!")
+                    await post_run(bot,1068245117544169545, run['data'], "Run Verified!")
                 else:
-                    await post_run(channel_id, run['data'], "Run Verified!")
+                    await post_run(bot,channel_id, run['data'], "Run Verified!")
 
 # TODO Finish this
 # Link SRC account to a Discord account

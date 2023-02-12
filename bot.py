@@ -17,7 +17,9 @@ base_url = "https://www.speedrun.com/api/v1/"
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
-DEV_MODE = True
+TINYDB_PATH = os.getenv('TINYDB_PATH')
+DEV_MODE = os.getenv('DEV_MODE') == 'True'
+GEN_DB_FLAG = False
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 game_db = json.load(open('games.json', 'r'))
@@ -83,21 +85,32 @@ async def get_wr(ctx):
     else:
         await ctx.send("No world record found")
 
-async def post_run(ctx,game,var,category,run):
-    embed = discord.Embed(title='World Record', color=discord.Color.random())
-    embed.add_field(name='Game', value=game['name'], inline=False)
-    embed.add_field(name='Category', value=game['full-game-categories'][category]['name'], inline=False)
-    # Check for variables
-    variable_text = ""
-    i = 0
-    for v in var:
-        variable_text += f"{game['full-game-categories'][category]['variables'][i]['values'][v]['name']}, "
-        i += 1
-    if variable_text != "":
-        embed.add_field(name='Variable/s', value=variable_text[:-2], inline=False)
-    # Check for Private User
-    if run['data']['runs'][0]['run']['players'][0]['rel'] == 'guest':
-        embed.add_field(name='Runner', value=run['data']['runs'][0]['run']['players'][0]['name'], inline=False)
+@tasks.loop(seconds = 300) # repeat after every five minutes
+async def post_verification():
+    channel_lookup = json.load(open('json/channels.json', 'r'))
+    notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
+    for notification in notifications:
+        notif_time = dt.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
+        if (dt.now() - notif_time).total_seconds() <= 300:
+            run = requests.get(notification["links"][0]["uri"]).json()
+            if len(run.keys())==1:
+                channel_id = channel_lookup[run['data']['game']]
+                print(f"New run validated for {run['data']['game']}")
+                if DEV_MODE:
+                    await post_run(1068245117544169545, run['data'], "Run Verified!")
+                else:
+                    await post_run(channel_id, run['data'], "Run Verified!")
+
+@bot.command(name="src", help="Set your SRC account")
+async def src(ctx, *args):
+    if len(args) != 1:
+        await ctx.send("Please provide your SRC account name")
+        return
+    account = args[0]
+    user = requests.get(f"{base_url}users/{account}").json()
+    if len(user.keys()) == 1:
+        # TODO Save to database
+        await validate_user(ctx.author.id, account)
     else:
         player_names = ""
         for player in run['data']['runs'][0]['run']['players']:
@@ -113,6 +126,17 @@ async def post_run(ctx,game,var,category,run):
     if realtime != run['data']['runs'][0]['run']['times']['primary_t']:
         embed.add_field(name='Realtime', value=datetime.timedelta(seconds=realtime), inline=True)
 
-    await ctx.send(embed=embed)
+# TODO Ideas
+#
+# Auto assign roles to people who get their runs verified. Would mean people would have to 
+# manually link their SRC accounts, but that can be done when people join the server
+# 
+# Giving the now streaming role when someone in the server streams a TICO game. Could be a role
+# to opt in to this feature, so I dont have to be checking everyone in the world
+#
+# Command that gives all the positions people have in all 3 games and CE
 
-bot.run(TOKEN)
+if DEV_MODE:
+    bot.run(TEST_TOKEN)
+else:
+    bot.run(TOKEN)

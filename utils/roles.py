@@ -30,7 +30,7 @@ async def handle_reaction(payload, bot, remove):
     await modify_role(custom_payload, bot, 929064886300971078, "🎥", "TICO Streamer")
     # Pronouns
     await pronouns_modify_role(custom_payload, bot)
-    await modify_role(custom_payload, bot, 929065214761123840, "👍", "Member")
+    await modify_role(custom_payload, bot, 929065214761123840, "👍", "Members")
    
 
 # custom_payload = [message_id, emoji_id, emoji, user, guild, remove, user]

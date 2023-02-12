@@ -45,7 +45,10 @@ db = TinyDB(TINYDB_PATH)
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
     post_verification.start()
+    print("Started post verification loop")
     await base_reactions(bot)
+
+    print("Init process complete!")
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -147,21 +150,6 @@ async def post_verification():
                     await post_run(bot,1068245117544169545, run['data'], "Run Verified!")
                 else:
                     await post_run(bot,channel_id, run['data'], "Run Verified!")
-
-# TODO Finish this
-# Link SRC account to a Discord account
-@bot.command(name="src", help="Set your SRC account")
-async def src(ctx, *args):
-    if len(args) != 1:
-        await ctx.send("Please provide your SRC account name")
-        return
-    account = args[0]
-    user = requests.get(f"{base_url}users/{account}").json()
-    if len(user.keys()) == 1:
-        # TODO Save to database
-        await validate_user(ctx.author.id, account)
-    else:
-        await ctx.send(f"Could not find account {account}")
 
 # TODO Ideas
 #

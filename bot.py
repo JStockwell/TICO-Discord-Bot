@@ -29,12 +29,17 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
+
 DEV_MODE = os.getenv('DEV_MODE') == 'True'
-GEN_DB_FLAG = False
+GEN_DB_FLAG = True
+
+GEN_DB_LAMBDA = not DEV_MODE or (DEV_MODE and GEN_DB_FLAG)
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
-    
+
+if GEN_DB_LAMBDA:
+    gen_db(games_path)
 game_db = json.load(open(games_path, 'r'))
 
 ### --- Functions --- ###
@@ -43,8 +48,7 @@ game_db = json.load(open(games_path, 'r'))
 async def on_ready():
     post(f'{bot.user.name} has connected to Discord!', False)
 
-    if not DEV_MODE or (DEV_MODE and GEN_DB_FLAG):
-        gen_db(games_path)
+    if GEN_DB_LAMBDA:
         await gen_streamer_list(bot)
 
     await base_reactions(bot)

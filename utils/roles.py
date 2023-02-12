@@ -6,6 +6,7 @@ import discord
 from dotenv import load_dotenv
 
 from utils.messages import post
+from utils.stream import gen_streamer_list
 
 sys.path.append("../TICO-DISCORD-BOT")
 
@@ -29,7 +30,7 @@ async def handle_reaction(payload, bot, remove):
     # TODO Add these functions
     # Alert and TICO Streamer
     await modify_role(custom_payload, bot, 929064886300971078, "❗", "Alert")
-    await modify_role(custom_payload, bot, 929064886300971078, "🎥", "TICO Streamer")
+    await streamer_modify_role(custom_payload, bot, 929064886300971078, "🎥", "TICO Streamer")
     # Pronouns
     await pronouns_modify_role(custom_payload, bot)
     await modify_role(custom_payload, bot, 929065214761123840, "👍", "Members")
@@ -50,6 +51,11 @@ async def pronouns_modify_role(payload, bot):
             await exe_modify_role(payload[3], payload[4], payload[5], "he/him")
         else:
             await exe_modify_role(payload[3], payload[4], payload[5], "they/them")
+
+async def streamer_modify_role(payload, bot, target_message_id, target_emoji, role_name):
+    if payload[0] == target_message_id and (payload[1] == target_emoji or payload[2] == target_emoji) and payload[3] != bot.user:
+        await exe_modify_role(payload[3], payload[4], payload[5], role_name)
+        await gen_streamer_list(bot)
 
 async def exe_modify_role(user, guild, remove, role_name):
     role = discord.utils.get(guild.roles, name=role_name)

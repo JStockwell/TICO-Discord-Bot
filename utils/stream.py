@@ -21,6 +21,10 @@ async def gen_streamer_list(bot):
 
     async for member in guild.fetch_members(limit=None):
         if member.get_role(1074369332777337023) is not None:
-            streamer_table.insert({'id': member.id, 'name': member.name})
+            if len(streamer_table.search(Query()["id"] == member.id)) == 0:
+                streamer_table.insert({'id': member.id, 'name': member.name})
+        else:
+            if len(streamer_table.search(Query()["id"] == member.id)) != 0:
+                streamer_table.remove(Query()["id"] == member.id)
 
     post("Streamer list generated successfully!", False)

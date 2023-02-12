@@ -133,7 +133,7 @@ async def get_wr(ctx, *args):
 
 @tasks.loop(seconds = 300) # repeat after every five minutes
 async def post_verification():
-    channel_lookup = json.load(open('utils/json/channels.json', 'r'))
+    channel_lookup = json.load(open('json/channels.json', 'r'))
     notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
     for notification in notifications:
         notif_time = dt.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
@@ -162,20 +162,6 @@ async def src(ctx, *args):
         await validate_user(ctx.author.id, account)
     else:
         await ctx.send(f"Could not find account {account}")
-
-async def validate_user(discord_id, account):
-    table = db.table('src_validation')
-    user = table.search(Query().discord == discord_id)
-    if len(user) == 0:
-        dm = await bot.get_user(discord_id).create_dm()
-        await dm.send(f"Ligma balls {account}")
-
-#table = db.table('users')
-#    user = table.search(Query().discord == ctx.author.id)
-#    if len(user) == 0:
-#        table.insert({'discord': ctx.author.id, 'src': account})
-#    else:
-#        table.update({'src': account}, Query().discord == ctx.author.id)
 
 # TODO Ideas
 #

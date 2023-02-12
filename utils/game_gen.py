@@ -3,6 +3,7 @@ import json
 import requests
 
 from utils.switch import switch, case
+from utils.messages import post
 
 base_url = "https://www.speedrun.com/api/v1/"
 
@@ -42,6 +43,8 @@ def gen_db(path):
 
     with open(path, "w") as outfile:
         outfile.write(json_object)
+
+    post("Database generated successfully!", False)
 
     gen_help()
 
@@ -179,6 +182,8 @@ def gen_help():
 
     with open("json/help.json", "w") as outfile:
         outfile.write(json_object)
+
+    post("Help generated successfully!", False)
 
 def gen_help_text(categories):
     text = "```"

@@ -10,7 +10,8 @@ from utils.help import help_command
 from utils.roles import base_reactions, handle_reaction
 from utils.runs import get_wr_ce, get_wr_standard, post_run
 from utils.game_gen import gen_db
-from utils.stream import post_stream
+from utils.stream import post_stream, gen_streamer_list
+from utils.messages import post
 
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
@@ -28,31 +29,33 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
-TINYDB_PATH = os.getenv('TINYDB_PATH')
 DEV_MODE = os.getenv('DEV_MODE') == 'True'
 GEN_DB_FLAG = False
 
 bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 bot.remove_command('help')
-
-if not DEV_MODE or (DEV_MODE and GEN_DB_FLAG):
-    gen_db(games_path)
+    
 game_db = json.load(open(games_path, 'r'))
-db = TinyDB(TINYDB_PATH)
 
 ### --- Functions --- ###
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} has connected to Discord!')
+    post(f'{bot.user.name} has connected to Discord!', False)
+
+    if not DEV_MODE or (DEV_MODE and GEN_DB_FLAG):
+        gen_db(games_path)
+        await gen_streamer_list(bot)
+
     await base_reactions(bot)
 
     post_stream.start()
+    post("Started post stream loop", False)
 
     post_verification.start()
-    print("Started post verification loop")
+    post("Started post verification loop", False)
 
-    print("Init process complete!")
+    post("Init process complete!", False)
 
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -71,7 +74,7 @@ async def on_command_error(ctx, error):
     else:
         message += f'An error has occurred, please try again!'
 
-    print(error)
+    post(error, True)
     await ctx.send(message)
 
 @bot.event
@@ -149,7 +152,7 @@ async def post_verification():
             run = requests.get(notification["links"][0]["uri"]).json()
             if len(run.keys())==1:
                 channel_id = channel_lookup[run['data']['game']]
-                print(f"New run validated for {run['data']['game']}")
+                post(f"New run validated for {run['data']['game']}", False)
                 if DEV_MODE:
                     await post_run(bot,1068245117544169545, run['data'], "Run Verified!")
                 else:

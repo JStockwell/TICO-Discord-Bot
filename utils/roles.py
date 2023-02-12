@@ -5,6 +5,8 @@ import discord
 
 from dotenv import load_dotenv
 
+from utils.messages import post
+
 sys.path.append("../TICO-DISCORD-BOT")
 
 async def handle_reaction(payload, bot, remove):
@@ -95,7 +97,7 @@ async def base_reactions(bot):
     if len(messages) == len(emotes):
         for i in range(len(messages)):
             await messages[i].add_reaction(emotes[i])
-        print("Base Reactions Added")
+        post("Base Reactions Added", False)
 
     else:
-        print("ERROR: Messages and Emotes are not the same length")
+        post("Messages and Emotes are not the same length", True)

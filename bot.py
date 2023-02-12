@@ -10,6 +10,7 @@ from utils.help import help_command
 from utils.roles import base_reactions, handle_reaction
 from utils.runs import get_wr_ce, get_wr_standard, post_run
 from utils.game_gen import gen_db
+from utils.stream import post_stream
 
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
@@ -44,9 +45,12 @@ db = TinyDB(TINYDB_PATH)
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
+    await base_reactions(bot)
+
+    post_stream.start()
+
     post_verification.start()
     print("Started post verification loop")
-    await base_reactions(bot)
 
     print("Init process complete!")
 

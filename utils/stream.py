@@ -1,4 +1,5 @@
 import os
+import discord
 
 from dotenv import load_dotenv
 from discord.ext import tasks
@@ -10,15 +11,9 @@ load_dotenv()
 TINYDB_PATH = os.getenv('TINYDB_PATH')
 db = TinyDB(TINYDB_PATH)
 
-@tasks.loop(seconds=10)
-async def post_stream():
-    var = 10
-
 async def gen_streamer_list(bot):
     streamer_table = db.table('streamers')
-
     guild = await bot.fetch_guild(155844173591740416)
-
     async for member in guild.fetch_members(limit=None):
         if member.get_role(1074369332777337023) is not None:
             if len(streamer_table.search(Query()["id"] == member.id)) == 0:
@@ -28,3 +23,17 @@ async def gen_streamer_list(bot):
                 streamer_table.remove(Query()["id"] == member.id)
 
     post("Streamer list generated successfully!", False)
+
+async def post_stream_msg(bot, stream, streams_list):
+    #channel =  bot.get_channel(539498046325784576)
+    # Test channel
+    channel =  bot.get_channel(1068245117544169545)
+
+    if stream["user_login"] not in streams_list:
+        streams_list.append(stream["user_login"])
+        
+        message = f'__**{stream["title"]}**__\n'
+        message += f'Playing: **{stream["game_name"]}**\n'
+        message += f'https://twitch.tv/{stream["user_login"]}'
+
+        await channel.send(message)

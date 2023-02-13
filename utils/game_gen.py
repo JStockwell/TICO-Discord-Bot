@@ -10,22 +10,27 @@ base_url = "https://www.speedrun.com/api/v1/"
 db = {
     "ico": {
         "id": "o1yrkr6q",
+        "twitch": '8839',
         "name": "ICO"
     },
     "sotc": {
         "id": "9j1l8v6g",
+        "twitch": '5975',
         "name": "Shadow of the Colossus"
     },
     "sotc(2018)": {
         "id": "y6545p8d",
+        "twitch": '5975',
         "name": "Shadow of the Colossus (2018)"
     },
     "tlg": {
         "id": "j1nvyx6p",
+        "twitch": '23961',
         "name": "The Last Guardian"
     },
     "ce": {
         "id": "y6547l0d",
+        'twitch': None,
         "name": "Category Extensions"
     }
 }

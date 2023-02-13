@@ -10,13 +10,13 @@ from utils.help import help_command
 from utils.roles import base_reactions, handle_reaction
 from utils.runs import get_wr_ce, get_wr_standard, post_run
 from utils.game_gen import gen_db
-from utils.stream import post_stream, gen_streamer_list
+from utils.stream import gen_streamer_list, post_stream_msg
 from utils.messages import post
 
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from datetime import datetime as dt
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 
 ### --- REST api Initialization --- ###
 
@@ -29,18 +29,24 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 TEST_TOKEN = os.getenv('TEST_TOKEN')
 SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
+TWITCH_TOKEN = os.getenv('TWITCH_TOKEN')
+TWITCH_CLIENT_ID = os.getenv('TWITCH_CLIENT_ID')
+TINYDB_PATH = os.getenv('TINYDB_PATH')
+db = TinyDB(TINYDB_PATH)
 
 DEV_MODE = os.getenv('DEV_MODE') == 'True'
-GEN_DB_FLAG = True
+GEN_DB_FLAG = False
 
 GEN_DB_LAMBDA = not DEV_MODE or (DEV_MODE and GEN_DB_FLAG)
 
-bot = commands.Bot(command_prefix='!', intents=discord.Intents.all())
+bot = commands.Bot(command_prefix='!', intents=discord.Intents().all())
 bot.remove_command('help')
 
 if GEN_DB_LAMBDA:
     gen_db(games_path)
 game_db = json.load(open(games_path, 'r'))
+
+streams_list = []
 
 ### --- Functions --- ###
 
@@ -53,6 +59,8 @@ async def on_ready():
 
     await base_reactions(bot)
 
+    reset_streams_list.start()
+    post("Started streams list loop", False)
     post_stream.start()
     post("Started post stream loop", False)
 
@@ -161,6 +169,39 @@ async def post_verification():
                     await post_run(bot,1068245117544169545, run['data'], "Run Verified!")
                 else:
                     await post_run(bot,channel_id, run['data'], "Run Verified!")
+
+@tasks.loop(seconds=180) # 3 minutes
+async def post_stream():
+    streamer_table = db.table('streamers')
+    guild = bot.get_guild(155844173591740416)
+
+    for streamer in streamer_table.all():
+        member = guild.get_member(streamer['id'])
+        stream_flag = False
+
+        for act in member.activities:
+            if isinstance(act, discord.Streaming): # Making sure it's the correct activity
+                headers = {'Authorization': f'Bearer {TWITCH_TOKEN}', 'Client-Id': TWITCH_CLIENT_ID}
+                user_login = act.url.split('/')[-1]
+                stream = requests.get(f'https://api.twitch.tv/helix/streams?user_login={user_login}', headers=headers).json()['data'][0]
+
+                for game in game_db:
+                    if stream['game_id'] == game_db[game]['twitch']:
+                        stream_flag = True
+                        await post_stream_msg(bot, stream, streams_list)
+
+        role = discord.utils.get(guild.roles, name="NOW STREAMING!")
+        if stream_flag:
+            await member.add_roles(role)
+
+        else:
+            await member.remove_roles(role)
+
+@tasks.loop(seconds=21600) # 6 hours
+async def reset_streams_list():
+    streams_list.clear()
+    post("Streams list reset", False)
+
 
 # TODO Ideas
 #

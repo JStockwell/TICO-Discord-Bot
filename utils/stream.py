@@ -9,6 +9,7 @@ from utils.messages import post
 
 load_dotenv()
 TINYDB_PATH = os.getenv('TINYDB_PATH')
+DEV_MODE = os.getenv('DEV_MODE') == 'True'
 db = TinyDB(TINYDB_PATH)
 
 async def gen_streamer_list(bot):
@@ -25,9 +26,11 @@ async def gen_streamer_list(bot):
     post("Streamer list generated successfully!", False)
 
 async def post_stream_msg(bot, stream, streams_list):
-    #channel =  bot.get_channel(539498046325784576)
     # Test channel
-    channel =  bot.get_channel(1068245117544169545)
+    if DEV_MODE:
+        channel =  bot.get_channel(1068245117544169545)
+    else:
+        channel =  bot.get_channel(539498046325784576)
 
     if stream["user_login"] not in streams_list:
         streams_list.append(stream["user_login"])

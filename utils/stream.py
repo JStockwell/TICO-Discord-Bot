@@ -1,3 +1,4 @@
+# Created by JStockwell on GitHub
 import os
 import discord
 
@@ -25,15 +26,15 @@ async def gen_streamer_list(bot):
 
     post("Streamer list generated successfully!", False)
 
-async def post_stream_msg(bot, stream, streams_list):
+async def post_stream_msg(bot, stream, username, streams_list):
     # Test channel
     if DEV_MODE:
         channel =  bot.get_channel(1068245117544169545)
     else:
         channel =  bot.get_channel(539498046325784576)
 
-    if stream["user_login"] not in streams_list:
-        streams_list.append(stream["user_login"])
+    if stream["username"] not in streams_list:
+        streams_list.append(stream["username"])
         
         message = f'__**{stream["title"]}**__\n'
         message += f'Playing: **{stream["game_name"]}**\n'

@@ -1,3 +1,4 @@
+# Created by JStockwell on GitHub
 from datetime import datetime
 
 class bcolors:

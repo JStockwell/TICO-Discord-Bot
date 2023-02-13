@@ -11,26 +11,31 @@ db = {
     "ico": {
         "id": "o1yrkr6q",
         "twitch": '8839',
+        "role": '412463087874998274',
         "name": "ICO"
     },
     "sotc": {
         "id": "9j1l8v6g",
         "twitch": '5975',
+        "role": '412463535327805440',
         "name": "Shadow of the Colossus"
     },
     "sotc(2018)": {
         "id": "y6545p8d",
         "twitch": '5975',
+        "role": '412463535327805440',
         "name": "Shadow of the Colossus (2018)"
     },
     "tlg": {
         "id": "j1nvyx6p",
         "twitch": '23961',
+        "role": '412463802722811904',
         "name": "The Last Guardian"
     },
     "ce": {
         "id": "y6547l0d",
         'twitch': None,
+        'role': None,
         "name": "Category Extensions"
     }
 }

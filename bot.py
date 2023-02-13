@@ -16,14 +16,17 @@ from utils.messages import post
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from datetime import datetime as dt
-from tinydb import TinyDB
+from tinydb import TinyDB, Query
 
 ### --- REST api Initialization --- ###
 
 base_url = "https://www.speedrun.com/api/v1/"
+
+### --- File Paths --- ###
+
 games_path = "json/games.json"
 
-### --- Bot Initialization --- ###
+### --- Environment Variables --- ###
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -32,19 +35,28 @@ SRCOM_TOKEN = os.getenv('SRCOM_TOKEN')
 TWITCH_TOKEN = os.getenv('TWITCH_TOKEN')
 TWITCH_CLIENT_ID = os.getenv('TWITCH_CLIENT_ID')
 TINYDB_PATH = os.getenv('TINYDB_PATH')
-db = TinyDB(TINYDB_PATH)
+
+### --- Developer Flags --- ###
 
 DEV_MODE = os.getenv('DEV_MODE') == 'True'
-GEN_DB_FLAG = False
+GEN_DB_FLAG = True
 
 GEN_DB_LAMBDA = not DEV_MODE or (DEV_MODE and GEN_DB_FLAG)
 
-bot = commands.Bot(command_prefix='!', intents=discord.Intents().all())
-bot.remove_command('help')
+### --- Database Initialization --- ###
+
+db = TinyDB(TINYDB_PATH)
 
 if GEN_DB_LAMBDA:
     gen_db(games_path)
 game_db = json.load(open(games_path, 'r'))
+
+### --- Bot Initialization --- ###
+
+bot = commands.Bot(command_prefix='!', intents=discord.Intents().all())
+bot.remove_command('help')
+
+### --- Variables --- ###
 
 streams_list = []
 
@@ -59,8 +71,8 @@ async def on_ready():
 
     await base_reactions(bot)
 
-    reset_streams_list.start()
-    post("Started streams list loop", False)
+    #reset_streams_list.start()
+    #post("Started streams list loop", False)
     post_stream.start()
     post("Started post stream loop", False)
 
@@ -79,6 +91,7 @@ async def on_error(event, *args, **kwargs):
 
 @bot.event
 async def on_command_error(ctx, error):
+    # Post error messages to console and send a generic error message to the user if not in dev mode
     message = " "
 
     if DEV_MODE:
@@ -119,20 +132,24 @@ async def socials(ctx):
 
 @bot.command(name="help", help="List of commands or help with a specific command")
 async def help(ctx, *args):
+    # Check if general help command
     if len(args) == 0:
         embed = discord.Embed(title="List of commands", color=0x00ff00)
         embed.add_field(name="", value="If you need to know more about a command, use !help <command>", inline=False)
+        # Generic help description
         for command in bot.commands:
             if command.name != "help":
                 embed.add_field(name=command.name, value=command.help, inline=False)
         await ctx.send(embed=embed)
     else:
         bot_command = None
+        # Check if the arg[0] is a registered command
         for command in bot.commands:
             if command.name == args[0]:
                 bot_command = command
                 break
-
+        
+        # Send the corresponding message or the generic error message
         if bot_command is None:
             await ctx.send("Command not found")
         else:
@@ -144,27 +161,66 @@ async def help(ctx, *args):
 async def get_wr(ctx, *args):
     # Get the game id
     game_name = args[0].lower()
-
     game = game_db[game_name]
 
+    # Check if the category is a Category Extension category
     if game_name == "ce":
         await get_wr_ce(bot, ctx, game, args)
-
     else:
         await get_wr_standard(bot, ctx, game, args)
 
-@tasks.loop(seconds = 300) # repeat after every five minutes
+@bot.command(name="src", help="Link your Discord account to your Speedrun.com account")
+async def src(ctx, *args):
+    User = Query()
+    username = args[0]
+    table = db.table('users')
+
+    # Check if user is already linked
+    response = table.search(User.src == username)
+    if len(response) > 0:
+        if response[0]['id'] == ctx.author.id:
+            await ctx.send("You are already linked to this account")
+        else:
+            await ctx.send("This account is already linked to another Discord account. If this is a mistake, please contact a moderator")
+    else:
+        req = requests.get(f"{base_url}users/{username}").json()
+        # Check if user exists
+        if len(req) > 1:
+            await ctx.send("User not found")
+        else:
+            check_user = table.search(User.id == ctx.author.id)
+            if len(check_user) > 0:
+                # Update user
+                table.update({'src': req['data']['id']}, User.id == ctx.author.id)
+                await ctx.send(f"Updated {username} to {ctx.author.name}")
+            else:
+                # Add user to database
+                table.insert({'id': ctx.author.id, 'src': req['data']['id']})
+                await ctx.send(f"Linked {username} to {ctx.author.name}")
+
+### --- Loops --- ###
+
+@tasks.loop(seconds = 300) # 5 minutes
 async def post_verification():
     channel_lookup = json.load(open('json/channels.json', 'r'))
     notifications = requests.get(f"{base_url}notifications", headers={"X-API-Key": SRCOM_TOKEN}).json()["data"]
+
     for notification in notifications:
         notif_time = dt.strptime(notification['created'].replace('T',' ').replace('Z',''), '%Y-%m-%d %H:%M:%S')
+
         if (dt.now() - notif_time).total_seconds() <= 300:
-            # TODO Add channel id based on game
             run = requests.get(notification["links"][0]["uri"]).json()
+
             if len(run.keys())==1:
                 channel_id = channel_lookup[run['data']['game']]
                 post(f"New run validated for {run['data']['game']}", False)
+
+                # Add role to user
+                game = game_db[run['data']['game']]
+                for runner in run['data']['players']:
+                    if runner['rel'] == 'user':
+                        await give_runner_role(bot, game, runner['id'])
+
                 if DEV_MODE:
                     await post_run(bot,1068245117544169545, run['data'], "Run Verified!")
                 else:
@@ -186,9 +242,16 @@ async def post_stream():
                 stream = requests.get(f'https://api.twitch.tv/helix/streams?user_login={user_login}', headers=headers).json()['data'][0]
 
                 for game in game_db:
+                    # Check if they're streaming a TICO Game
                     if stream['game_id'] == game_db[game]['twitch']:
                         stream_flag = True
-                        await post_stream_msg(bot, stream, streams_list)
+                        await post_stream_msg(bot, stream, streamer['name'], streams_list)
+
+                    else:
+                        remove_streamer(streamer['name'], streams_list)
+
+            else:
+                remove_streamer(streamer['name'], streams_list)
 
         role = discord.utils.get(guild.roles, name="NOW STREAMING!")
         if stream_flag:
@@ -197,21 +260,28 @@ async def post_stream():
         else:
             await member.remove_roles(role)
 
+def remove_streamer(username, streams_list):
+    if username in streams_list:
+        streams_list.remove(username)
+        post(f"Removed {username} from streams list", False)
+
 @tasks.loop(seconds=21600) # 6 hours
 async def reset_streams_list():
     streams_list.clear()
     post("Streams list reset", False)
 
 
-# TODO Ideas
-#
+### --- TODO Ideas --- ###
+
 # Auto assign roles to people who get their runs verified. Would mean people would have to 
 # manually link their SRC accounts, but that can be done when people join the server
-# 
+
 # Giving the now streaming role when someone in the server streams a TICO game. Could be a role
 # to opt in to this feature, so I dont have to be checking everyone in the world
-#
+
 # Command that gives all the positions people have in all 3 games and CE
+
+### --- Execution --- ###
 
 if DEV_MODE:
     bot.run(TEST_TOKEN)
